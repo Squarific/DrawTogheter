@@ -61,6 +61,38 @@ DrawTogheter.prototype.setToolColor = function setToolColor (color) {
 	this.toolColor = color;
 };
 
+DrawTogheter.prototype.addDrawing = function addDrawing (drawing) {
+	this.localDrawings.push(drawing);
+	/*this.socket.emit("newdrawing", drawing, function () {
+		var index = this.localDrawings.indexOf(drawing);
+		if (index !== -1) {
+			this.localDrawings.splice(index, 1);
+			this.redrawLocals();
+		}
+	}.bind(this));*/
+	this.redrawLocals();
+};
+
+DrawTogheter.prototype.addNewLine = function addNewLine (point1, point2) {
+	var drawing = [0, point1, point2, this.toolSize, this.toolColor];
+	this.addDrawing(drawing);
+};
+
+DrawTogheter.prototype.drawDrawing = function drawDrawing (ctx, drawing) {
+	switch (drawing[0]) {
+		case 0:
+			this.drawLine(ctx, drawing[1][0], drawing[1][1], drawing[2][0], drawing[2][1], drawing[3], drawing[4]);
+		break;
+	}
+};
+
+DrawTogheter.prototype.redrawLocals = function redrawLocals () {
+	this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	for (var d = 0; d < this.localDrawings.length; d++) {
+		this.drawDrawing(this.ctx, this.localDrawings[d]);
+	}
+};
+
 DrawTogheter.prototype.drawLine = function (ctx, sx, sy, ex, ey, size, color) {
 	ctx.beginPath();
 	ctx.moveTo(sx, sy);
@@ -95,8 +127,8 @@ DrawTogheter.prototype.tools.line = function (event) {
 		return;
 	}
 
-	var clientX = (event.clientX || event.changedTouches[0].clientX),
-	    clientY = (event.clientY || event.changedTouches[0].clientY),
+	var clientX = (typeof event.clientX === 'number') ? event.clientX : event.changedTouches[0].clientX,
+	    clientY = (typeof event.clientY === 'number') ? event.clientY : event.changedTouches[0].clientY,
 		target = event.target || document.elementFromPoint(clientX, clientY),
 		boundingBox = target.getBoundingClientRect(),
 	    relativeX = clientX - boundingBox.left,
@@ -105,6 +137,7 @@ DrawTogheter.prototype.tools.line = function (event) {
 	if (event.type === 'click' || event.type === 'touchend') {
 		if (this.linePoint) {
 			this.addNewLine(this.linePoint, [relativeX, relativeY]);
+			this.eCtx.clearRect(0, 0, this.effects.width, this.effects.height);
 			delete this.linePoint;
 		} else {
 			this.linePoint = [relativeX, relativeY];
