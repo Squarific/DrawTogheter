@@ -113,6 +113,7 @@ DrawTogheter.prototype.tools.line = function (event) {
 	if ((event.type === 'mousemove' || event.type === 'touchmove') && this.linePoint) {
 		this.eCtx.clearRect(0, 0, this.effects.width, this.effects.height);
 		this.drawLine(this.eCtx, this.linePoint[0], this.linePoint[1], relativeX, relativeY, this.toolSize, this.toolColor);
+		event.preventDefault();
 	}
 };
 
