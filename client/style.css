@@ -1,0 +1,51 @@
+html, body {
+	margin:0;
+	padding:0;
+}
+
+#drawregion {
+	position:relative;
+	min-height:400px;
+	background:rgb(238, 238, 238);
+}
+
+.tools {
+	text-align:center;
+	background:rgb(110, 138, 153);
+	border-bottom:rgb(73, 93, 102) 3px solid;
+	color:white;
+}
+
+.toolbutton {
+	display:inline-block;
+	padding:15px;
+	padding-left:25px;
+	padding-right:25px;
+	margin-left:5px;
+	margin-right:5px;
+	cursor:pointer;
+}
+
+.toolbutton:hover {
+	background:rgb(104, 127, 141);
+}
+
+.sizeinputcontainer {
+	display:inline-block;
+	margin-left:50px;
+	margin-right:10px;
+}
+
+.sizeinput {
+	width:40px;
+}
+
+.colorbutton {
+	padding:5px;
+	margin-left:10px;
+	margin-right:10px;
+}
+
+.active {
+	background:rgb(126, 151, 163);
+}

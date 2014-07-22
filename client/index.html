@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Draw togheter</title>
+		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="projects.css">
+		<meta name="viewport" content="width=device-width">
+	</head>
+	<body>
+		<div class="tools">
+			<div class="toolbutton" onclick="drawTogheter.setTool('grab'); activate(this)">Grab</div>
+			<div class="toolbutton" onclick="drawTogheter.setTool('line'); activate(this)">Line</div>
+			<div class="toolbutton active" onclick="drawTogheter.setTool('brush'); activate(this)">Brush</div>
+			<div class="sizeinputcontainer">
+				Brush Size:
+				<input value="5" type="number" class="sizeinput" onchange="drawTogheter.setToolSize(parseInt(this.value))"/>
+			</div>
+			<input class="colorbutton" type="color" value="#F0BC11" onchange="drawTogheter.setToolColor(this.value);"/>
+		</div>
+		<div id="drawregion"></div>
+		<div class="projects">
+			<div class="subtitle">Check out some other projects:</div>
+			<a href="/neuralcar/" class="project" title="NeuralCar">
+				<img src="screens/neuralcar.png" alt="NeuralCar"/>
+				<div class="label">Name:</div>
+				NeuralCar 2.0 (Open Source)
+				<div class="label">Description:</div>
+				Second version of the car simulation. Each car has a neural network that controls it. Those then go trough generations of evolution till they can drive themself.
+			</a>
+			<a href="/simplelogic/" class="project" title="NeuralCar">
+				<img src="screens/simplelogic.png" alt="SimpleLogic"/>
+				<div class="label">Name:</div>
+				SimpleLogic (Open Source)
+				<div class="label">Description:</div>
+				Logic gates simulation in the browser with the ability to share modules. It's also fairly easy to create new nodes.
+			</a>
+			<a href="/kevin/" class="project" title="Pong">
+				<img src="screens/pong.png" alt="Pong"/>
+				<div class="label">Name:</div>
+				Pong (Kevin)
+				<div class="label">Description:</div>
+				The classic pong game as a html5 game made for learning purposes.
+			</a>
+			<a href="http://webreview.squarific.com" class="project" title="WebReviewPlugin">
+				<img src="screens/webreviewplugin.png" alt="Web Review Plugin"/>
+				<div class="label">Name:</div>
+				WebReviewPlugin
+				<div class="label">Description:</div>
+				A chrome plugin that easily lets you search reviews for websites and review websites yourself.
+			</a>
+			<a href="/" class="project" title="Squarific Homepage">
+				<img src="screens/squarific.png" alt="Squarific">
+				<div class="label">Name:</div>
+				Squarific homepage
+				<div class="label">Description:</div>
+				A collection of my best projects.
+			</a>
+			<a href="http://www.squarific.com/proceduralimage" class="project" title="Procedural Image">
+				<img src="screens/proceduralimage.png" alt="Procedural Image"/>
+				<div class="label">Type:</div>
+				Procedural Image
+				<div class="label">Description:</div>
+				Images generated using neural networks, you select the image the looks like you want and it will evolve. (Not fully finished)
+			</a>
+		</div>
+		<script src="DrawTogheter.js"></script>
+		<script>
+			function activate (target) {
+				var buttons = document.getElementsByClassName("toolbutton");
+				for (var k = 0; k < buttons.length; k++) {
+					buttons[k].classList.remove("active");
+				}
+				target.classList.add("active");
+			}
+			var drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://drawTogheter.squarific.com");
+		</script>
+	</body>
+</html>
