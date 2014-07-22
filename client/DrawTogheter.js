@@ -102,7 +102,7 @@ DrawTogheter.prototype.tools.line = function (event) {
 	    relativeX = clientX - boundingBox.left,
 	    relativeY = clientY - boundingBox.top;
 
-	if (event.type === 'click') {
+	if (event.type === 'click' || event.type === 'touchend') {
 		if (this.linePoint) {
 			this.addNewLine(this.linePoint, [relativeX, relativeY]);
 			delete this.linePoint;
