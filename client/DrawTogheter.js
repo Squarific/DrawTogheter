@@ -73,13 +73,17 @@ DrawTogheter.prototype.addDrawing = function addDrawing (drawing) {
 	this.redrawLocals();
 };
 
-DrawTogheter.prototype.addNewLine = function addNewLine (point1, point2) {
-	var drawing = [0, point1, point2, this.toolSize, this.toolColor];
+DrawTogheter.prototype.addNewLine = function addNewLine (point1, point2, size, color) {
+	var size = size || this.toolSize;
+	var color = color || this.toolColor;
+	var drawing = [0, point1, point2, size, color];
 	this.addDrawing(drawing);
 };
 
-DrawTogheter.prototype.addNewDot = function addNewDot (x, y) {
-	var drawing = [1, x, y, this.toolSize, this.toolColor];
+DrawTogheter.prototype.addNewDot = function addNewDot (x, y, size, color) {
+	var size = size || this.toolSize;
+	var color = color || this.toolColor;
+	var drawing = [1, x, y, size, color];
 	this.addDrawing(drawing);
 };
 
@@ -117,8 +121,8 @@ DrawTogheter.prototype.drawDot = function (ctx, x, y, size, color) {
 	ctx.fill();
 };
 
-DrawTogheter.prototype.drawing = function (data) {
-
+DrawTogheter.prototype.sqDistance = function (p1, p2) {
+	return (p1[0] - p2[0]) * (p1[0] - p2[0]) + (p1[1] - p2[1]) * (p1[1] - p2[1]);
 };
 
 DrawTogheter.prototype.tools = {};
@@ -160,6 +164,15 @@ DrawTogheter.prototype.tools.line = function (event) {
 };
 
 DrawTogheter.prototype.tools.brush = function (event) {
+	if (typeof event !== 'object') {
+		if (event === 'remove') {
+			this.eCtx.clearRect(0, 0, this.effects.width, this.effects.height);
+			delete this.lastPoint;
+			delete this.brushing;
+		}
+		return;
+	}
+
 	var clientX = (typeof event.clientX === 'number') ? event.clientX : event.changedTouches[0].clientX,
 		clientY = (typeof event.clientY === 'number') ? event.clientY : event.changedTouches[0].clientY,
 		target = event.target || document.elementFromPoint(clientX, clientY),
@@ -167,12 +180,23 @@ DrawTogheter.prototype.tools.brush = function (event) {
 		relativeX = clientX - boundingBox.left,
 		relativeY = clientY - boundingBox.top;
 
-	if (event.type === 'mousedown' || event.type === 'touchstart') this.brushing = true;
-	if (event.type === 'mouseup' || event.type === 'touchend') this.brushing = false;
+	if (event.type === 'mousedown' || event.type === 'touchstart') {
+		this.brushing = true;
+		this.lastPoint = [relativeX, relativeY];
+	}
+	if (event.type === 'mouseup' || event.type === 'touchend') {
+		delete this.brushing;
+		delete this.lastPoint;
+	}
 
 	if (event.type === 'mousemove' || event.type === 'touchmove') {
 		if (this.brushing) {
+			// If the distance is bigger than half the toolSize we draw a line
+			if (this.sqDistance(this.lastPoint, [relativeX, relativeY]) > (this.toolSize * this.toolSize) / 4) {
+				this.addNewLine(this.lastPoint, [relativeX, relativeY], this.toolSize * 2);
+			}
 			this.addNewDot(relativeX, relativeY);
+			this.lastPoint = [relativeX, relativeY];
 			event.preventDefault();
 		}
 
