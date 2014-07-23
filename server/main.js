@@ -4,7 +4,7 @@ var mysql = require("mysql");
 var database = mysql.createConnection({
 	host: "localhost",
 	user: "drawtogheter",
-	password: "ljfa24y92fh9239",
+	password: 'secret',
 	database: "drawtogheter"
 });
 
@@ -42,14 +42,21 @@ io.on('connection', function (socket) {
 
 	socket.on('leave', function () {
 		io.to(socket.drawroom).emit("chat", socket.dName + " left.");
+		console.log(socket.dName + " left.");
 	});
 
     socket.on('join', function (room) {
 		io.to(socket.drawroom).emit("chat", socket.dName + " left " + room + ".");
+		console.log(socket.dName + " left " + room + ".");
         socket.leave(socket.drawroom);
         socket.drawroom = room;
-        database.query('SELECT * FROM drawings WHERE now > NOW() - INTERVAL 1 HOUR AND room = ?', [socket.drawroom], function (err, rows, fields) {
-            var drawings = [];
+        database.query('SELECT * FROM (SELECT * FROM drawings WHERE now > NOW() - INTERVAL 1 HOUR AND room = ? ORDER BY now DESC LIMIT 10000) AS T ORDER BY now ASC', [socket.drawroom], function (err, rows, fields) {
+            if (err) {
+				console.log(err);
+				return;
+			}
+			console.log(rows);
+			var drawings = [];
             for (var d = 0; d < rows.length; d++) {
                 if (typeof rows[d].x2 === 'number') {
                     drawings[d] = [rows[d].dtype, [rows[d].x1, rows[d].y1], [rows[d].x2, rows[d].y2], rows[d].size, rows[d].color];
@@ -60,6 +67,7 @@ io.on('connection', function (socket) {
             socket.emit('drawings', drawings);
             socket.join(socket.drawroom);
             io.to(socket.drawroom).emit("chat", socket.dName + " joined " + socket.drawroom + ".");
+			console.log(socket.dName + " joined " + socket.drawroom + ".");
         });
     });
 
