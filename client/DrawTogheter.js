@@ -83,6 +83,8 @@ DrawTogheter.prototype.connect = function connect (server) {
 };
 
 DrawTogheter.prototype.chat = function chat (msg) {
+	if (this.messages.scrollTop === this.messages.scrollHeight - this.messages.offsetHeight) var scroll = true;
+
 	var msgContainer = this.messages.appendChild(document.createElement('div'));
 	msgContainer.className = "messagecontainer";
 	if (typeof msg === "string") {
@@ -95,7 +97,8 @@ DrawTogheter.prototype.chat = function chat (msg) {
 		message.className = "message";
 		message.appendChild(document.createTextNode(msg.msg))
 	}
-	this.messages.scrollTop = this.messages.scrollHeight;
+
+	if (scroll) this.messages.scrollTop = this.messages.scrollHeight;
 };
 
 DrawTogheter.prototype.changeRoom = function changeRoom (room) {
