@@ -40,14 +40,14 @@ io.on('connection', function (socket) {
         socket.dName = name;
     });
 
-	socket.on('leave', function () {
+	socket.on('disconnect', function () {
 		io.to(socket.drawroom).emit("chat", socket.dName + " left.");
 		console.log(socket.dName + " left.");
 	});
 
     socket.on('join', function (room) {
-		io.to(socket.drawroom).emit("chat", socket.dName + " left " + room + ".");
-		console.log(socket.dName + " left " + room + ".");
+		io.to(socket.drawroom).emit("chat", socket.dName + " left " + socket.drawroom + ".");
+		console.log(socket.dName + " left " + socket.drawroom + ".");
         socket.leave(socket.drawroom);
         socket.drawroom = room;
         database.query('SELECT * FROM (SELECT * FROM drawings WHERE now > NOW() - INTERVAL 1 HOUR AND room = ? ORDER BY now DESC LIMIT 10000) AS T ORDER BY now ASC', [socket.drawroom], function (err, rows, fields) {
@@ -55,7 +55,6 @@ io.on('connection', function (socket) {
 				console.log(err);
 				return;
 			}
-			console.log(rows);
 			var drawings = [];
             for (var d = 0; d < rows.length; d++) {
                 if (typeof rows[d].x2 === 'number') {
@@ -74,13 +73,21 @@ io.on('connection', function (socket) {
     socket.on('drawing', function (drawing, callback) {
         if (typeof drawing !== 'object') {
             console.log("Someone send a non object as drawing", drawing);
+			callback();
             return;
         }
 
         if (drawing[0] < 0 || drawing[0] > 1) {
             console.log("Someone send an unknown drawing type", drawing);
+			callback();
             return;
         }
+
+		if (drawing[3] < 0 || drawing[3] > 50) {
+			console.log("Someone drew a negative size or too big", drawing);
+			callback();
+			return;
+		}
 
         var normalizedDrawing = {
             dtype: drawing[0]

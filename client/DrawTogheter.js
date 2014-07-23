@@ -69,6 +69,16 @@ DrawTogheter.prototype.connect = function connect (server) {
 	this.socket.on("name", function (name) {
 		document.getElementById('nameinput').value = name;
 	});
+	this.socket.on('disconnect', function () {
+		this.chat('You have been disconnected, attemting to reconnect');
+	}.bind(this));
+	this.socket.on('reconnect', function () {
+		this.chat('You have been reconnected, joining main room');
+		this.socket.emit("join", "main");
+	}.bind(this));
+	this.socket.on('connect', function () {
+		this.chat('You have been connected, joining main room');
+	}.bind(this));
 	this.socket.emit("join", "main");
 };
 
@@ -110,6 +120,8 @@ DrawTogheter.prototype.setTool = function setTool (tool) {
 };
 
 DrawTogheter.prototype.setToolSize = function setToolSize (size) {
+	if (size > 50) return;
+	if (size < 0) return;
 	this.toolSize = size;
 };
 
@@ -172,6 +184,7 @@ DrawTogheter.prototype.alldrawings = function drawings (drawings) {
 };
 
 DrawTogheter.prototype.drawLine = function (ctx, sx, sy, ex, ey, size, color) {
+	if (size < 1) return;
 	ctx.beginPath();
 	ctx.moveTo(sx, sy);
 	ctx.lineTo(ex, ey);
@@ -181,6 +194,7 @@ DrawTogheter.prototype.drawLine = function (ctx, sx, sy, ex, ey, size, color) {
 };
 
 DrawTogheter.prototype.drawDot = function (ctx, x, y, size, color) {
+	if (size < 1) return;
 	ctx.beginPath();
 	ctx.arc(x, y, size, 0, 2*Math.PI);
 	ctx.fillStyle = color;
@@ -194,6 +208,7 @@ DrawTogheter.prototype.sqDistance = function (p1, p2) {
 DrawTogheter.prototype.tools = {};
 
 DrawTogheter.prototype.tools.grab = function (event) {
+
 };
 
 DrawTogheter.prototype.tools.line = function (event) {

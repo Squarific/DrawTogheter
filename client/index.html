@@ -13,7 +13,7 @@
 			<div class="toolbutton active" onclick="drawTogheter.setTool('brush'); activate(this)">Brush</div>
 			<div class="sizeinputcontainer">
 				Brush Size:
-				<input value="5" type="number" class="sizeinput" onchange="drawTogheter.setToolSize(parseInt(this.value))" onkeyup="drawTogheter.setToolSize(parseInt(this.value))"/>
+				<input value="5" type="number" class="sizeinput" max="50" onchange="drawTogheter.setToolSize(parseInt(this.value))" onkeyup="drawTogheter.setToolSize(parseInt(this.value))"/>
 			</div>
 			<input class="colorbutton" type="color" value="#F0BC11" onchange="drawTogheter.setToolColor(this.value);"/>
 			<div class="roominputcontaner">
@@ -73,6 +73,7 @@
 				Images generated using neural networks, you select the image the looks like you want and it will evolve. (Not fully finished)
 			</a>
 		</div>
+		<script src="polyfill.js"></script>
 		<script src="http://drawtogheter.squarific.com:8475/socket.io/socket.io.js"></script>
 		<script src="DrawTogheter.js"></script>
 		<script>
