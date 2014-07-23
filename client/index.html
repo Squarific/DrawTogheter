@@ -8,7 +8,7 @@
 	</head>
 	<body>
 		<div class="tools">
-			<<div class="toolbutton" onclick="drawTogheter.setTool('grab'); activate(this)">Grab</div>
+			<div class="toolbutton" onclick="drawTogheter.setTool('grab'); activate(this)">Grab</div>
 			<div class="toolbutton" onclick="drawTogheter.setTool('line'); activate(this)">Line</div>
 			<div class="toolbutton active" onclick="drawTogheter.setTool('brush'); activate(this)">Brush</div>
 			<div class="sizeinputcontainer">
@@ -20,6 +20,11 @@
 				Go to a different room:
 				<input id="roominput" value="main" />
 				<div onclick="drawTogheter.changeRoom(document.getElementById('roominput').value)" class="toolbutton">Change room</div>
+			</div>
+			<div class="roominputcontaner">
+				Change name:
+				<input id="nameinput" value="name" />
+				<div onclick="drawTogheter.changeName(document.getElementById('nameinput').value)" class="toolbutton">Change name</div>
 			</div>
 		</div>
 		<div id="drawregion"></div>
@@ -68,7 +73,7 @@
 				Images generated using neural networks, you select the image the looks like you want and it will evolve. (Not fully finished)
 			</a>
 		</div>
-		<script src="http://127.0.0.1:8475/socket.io/socket.io.js"></script>
+		<script src="http://drawtogheter.squarific.com:8475/socket.io/socket.io.js"></script>
 		<script src="DrawTogheter.js"></script>
 		<script>
 			function activate (target) {
@@ -78,7 +83,9 @@
 				}
 				target.classList.add("active");
 			}
-			var drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://127.0.0.1:8475");
+			var drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://drawtogheter.squarific.com:8475");
 		</script>
+		<!-- Go to www.addthis.com/dashboard to customize your tools -->
+		<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-53c4fbf2311fe8f1"></script>
 	</body>
 </html>

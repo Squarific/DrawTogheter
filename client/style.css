@@ -30,7 +30,7 @@ html, body {
 }
 
 .messagecontainer:nth-child(even) {
-	background:lightgray;
+	background:rgb(156, 156, 156);
 }
 
 .messageinputcontainer {
@@ -95,6 +95,7 @@ html, body {
 	font-weight:bold;
 	padding:20px;
 	font-size:18px;
+	margin:0;
 	box-sizing:border-box;
 }
 

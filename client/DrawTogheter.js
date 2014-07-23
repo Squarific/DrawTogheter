@@ -66,6 +66,9 @@ DrawTogheter.prototype.connect = function connect (server) {
 	this.socket.on("drawing", this.drawing.bind(this));
 	this.socket.on("drawings", this.alldrawings.bind(this));
 	this.socket.on("chat", this.chat.bind(this));
+	this.socket.on("name", function (name) {
+		document.getElementById('nameinput').value = name;
+	});
 	this.socket.emit("join", "main");
 };
 

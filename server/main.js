@@ -11,6 +11,11 @@ var database = mysql.createConnection({
 io.on('connection', function (socket) {
     socket.dName = utils.randomString(8);
     console.log("New connectedion: " + socket.dName);
+	socket.emit('name', socket.dName);
+	socket.emit('chat', 'Welcome to drawtogheter');
+	socket.emit('chat', 'This is an opensource prject, the source code can be found here: https://github.com/Squarific/DrawTogheter');
+	socket.emit('chat', 'If you like this project, please share it with your friends.');
+	socket.emit('chat', 'If you want to see new features, consider donating: 148a4MsNDoRh7cpCidxUNwM63eQr1UNtkb.');
 
     socket.on('chat', function (msg) {
 		if (msg == "") return;
@@ -40,7 +45,7 @@ io.on('connection', function (socket) {
 	});
 
     socket.on('join', function (room) {
-		io.to(socket.drawroom).emit("chat", socket.dName + " left the room.");
+		io.to(socket.drawroom).emit("chat", socket.dName + " left " + room + ".");
         socket.leave(socket.drawroom);
         socket.drawroom = room;
         database.query('SELECT * FROM drawings WHERE now > NOW() - INTERVAL 1 HOUR AND room = ?', [socket.drawroom], function (err, rows, fields) {
@@ -54,7 +59,7 @@ io.on('connection', function (socket) {
             }
             socket.emit('drawings', drawings);
             socket.join(socket.drawroom);
-            io.to(socket.drawroom).emit("chat", socket.dName + " joined this room.");
+            io.to(socket.drawroom).emit("chat", socket.dName + " joined " + socket.drawroom + ".");
         });
     });
 
