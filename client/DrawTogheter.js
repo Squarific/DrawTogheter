@@ -219,4 +219,5 @@ DrawTogheter.prototype.resizeHandler = function () {
 	this.canvas.height = this.container.offsetHeight;
 	this.effects.width = this.container.offsetWidth;
 	this.effects.height = this.container.offsetHeight;
+	this.redrawLocals();
 };
