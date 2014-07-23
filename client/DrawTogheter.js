@@ -33,7 +33,7 @@ function DrawTogheter (container, server) {
 
 	this.resizeHandler();
 
-	//this.connect(server);
+	this.connect(server);
 }
 
 DrawTogheter.prototype.setCanvasPosition = function setCanvasPosition (canvas) {
@@ -44,7 +44,7 @@ DrawTogheter.prototype.setCanvasPosition = function setCanvasPosition (canvas) {
 
 DrawTogheter.prototype.connect = function connect (server) {
 	this.socket = io(server);
-	this.socket.on("drawing", this.drawing);
+	this.socket.on("drawing", this.drawing.bind(this));
 };
 
 DrawTogheter.prototype.setTool = function setTool (tool) {
@@ -64,14 +64,14 @@ DrawTogheter.prototype.setToolColor = function setToolColor (color) {
 
 DrawTogheter.prototype.addDrawing = function addDrawing (drawing) {
 	this.localDrawings.push(drawing);
-	/*this.socket.emit("newdrawing", drawing, function () {
+	this.socket.emit("drawing", drawing, function () {
 		var index = this.localDrawings.indexOf(drawing);
 		if (index !== -1) {
 			this.localDrawings.splice(index, 1);
-			this.redrawLocals();
+			this.drawDrawings(this.ctx, this.localDrawings);
 		}
-	}.bind(this));*/
-	this.redrawLocals();
+	}.bind(this));
+	this.drawDrawings(this.ctx, this.localDrawings);
 };
 
 DrawTogheter.prototype.addNewLine = function addNewLine (point1, point2, size, color) {
@@ -99,11 +99,16 @@ DrawTogheter.prototype.drawDrawing = function drawDrawing (ctx, drawing) {
 	}
 };
 
-DrawTogheter.prototype.redrawLocals = function redrawLocals () {
-	this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-	for (var d = 0; d < this.localDrawings.length; d++) {
-		this.drawDrawing(this.ctx, this.localDrawings[d]);
+DrawTogheter.prototype.drawDrawings = function drawDrawings (ctx, drawings) {
+	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	for (var d = 0; d < drawings.length; d++) {
+		this.drawDrawing(ctx, drawings[d]);
 	}
+};
+
+DrawTogheter.prototype.drawing = function drawing (drawing) {
+	this.drawings.push(drawing);
+	this.drawDrawing(this.bCtx, drawing);
 };
 
 DrawTogheter.prototype.drawLine = function (ctx, sx, sy, ex, ey, size, color) {
@@ -219,5 +224,6 @@ DrawTogheter.prototype.resizeHandler = function () {
 	this.canvas.height = this.container.offsetHeight;
 	this.effects.width = this.container.offsetWidth;
 	this.effects.height = this.container.offsetHeight;
-	this.redrawLocals();
+	this.drawDrawings(this.ctx, this.localDrawings);
+	this.drawDrawings(this.bCtx, this.drawings);
 };

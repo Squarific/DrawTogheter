@@ -63,6 +63,7 @@
 				Images generated using neural networks, you select the image the looks like you want and it will evolve. (Not fully finished)
 			</a>
 		</div>
+		<script src="http://127.0.0.1:8475/socket.io/socket.io.js"></script>
 		<script src="DrawTogheter.js"></script>
 		<script>
 			function activate (target) {
@@ -72,7 +73,7 @@
 				}
 				target.classList.add("active");
 			}
-			var drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://drawTogheter.squarific.com");
+			var drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://127.0.0.1:8475");
 		</script>
 	</body>
 </html>
