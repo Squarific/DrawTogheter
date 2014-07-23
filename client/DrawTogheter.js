@@ -78,10 +78,18 @@ DrawTogheter.prototype.addNewLine = function addNewLine (point1, point2) {
 	this.addDrawing(drawing);
 };
 
+DrawTogheter.prototype.addNewDot = function addNewDot (x, y) {
+	var drawing = [1, x, y, this.toolSize, this.toolColor];
+	this.addDrawing(drawing);
+};
+
 DrawTogheter.prototype.drawDrawing = function drawDrawing (ctx, drawing) {
 	switch (drawing[0]) {
 		case 0:
 			this.drawLine(ctx, drawing[1][0], drawing[1][1], drawing[2][0], drawing[2][1], drawing[3], drawing[4]);
+		break;
+		case 1:
+			this.drawDot(ctx, drawing[1], drawing[2], drawing[3], drawing[4]);
 		break;
 	}
 };
@@ -143,6 +151,7 @@ DrawTogheter.prototype.tools.line = function (event) {
 			this.linePoint = [relativeX, relativeY];
 		}
 	}
+
 	if ((event.type === 'mousemove' || event.type === 'touchmove') && this.linePoint) {
 		this.eCtx.clearRect(0, 0, this.effects.width, this.effects.height);
 		this.drawLine(this.eCtx, this.linePoint[0], this.linePoint[1], relativeX, relativeY, this.toolSize, this.toolColor);
@@ -151,6 +160,25 @@ DrawTogheter.prototype.tools.line = function (event) {
 };
 
 DrawTogheter.prototype.tools.brush = function (event) {
+	var clientX = (typeof event.clientX === 'number') ? event.clientX : event.changedTouches[0].clientX,
+		clientY = (typeof event.clientY === 'number') ? event.clientY : event.changedTouches[0].clientY,
+		target = event.target || document.elementFromPoint(clientX, clientY),
+		boundingBox = target.getBoundingClientRect(),
+		relativeX = clientX - boundingBox.left,
+		relativeY = clientY - boundingBox.top;
+
+	if (event.type === 'mousedown' || event.type === 'touchstart') this.brushing = true;
+	if (event.type === 'mouseup' || event.type === 'touchend') this.brushing = false;
+
+	if (event.type === 'mousemove' || event.type === 'touchmove') {
+		if (this.brushing) {
+			this.addNewDot(relativeX, relativeY);
+			event.preventDefault();
+		}
+
+		this.eCtx.clearRect(0, 0, this.effects.width, this.effects.height);
+		this.drawDot(this.eCtx, relativeX, relativeY, this.toolSize, this.toolColor);
+	}
 };
 
 DrawTogheter.prototype.callTool = function () {
