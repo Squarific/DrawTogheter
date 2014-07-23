@@ -8,5 +8,6 @@ CREATE TABLE IF NOT EXISTS drawings (
     size INT,
     color VARCHAR(7),
     room VARCHAR(255),
+    now DATETIME
 	PRIMARY KEY (id)
 );

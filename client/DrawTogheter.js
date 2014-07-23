@@ -45,6 +45,7 @@ DrawTogheter.prototype.setCanvasPosition = function setCanvasPosition (canvas) {
 DrawTogheter.prototype.connect = function connect (server) {
 	this.socket = io(server);
 	this.socket.on("drawing", this.drawing.bind(this));
+	this.socket.on("drawings", this.alldrawings.bind(this));
 };
 
 DrawTogheter.prototype.setTool = function setTool (tool) {
@@ -109,6 +110,11 @@ DrawTogheter.prototype.drawDrawings = function drawDrawings (ctx, drawings) {
 DrawTogheter.prototype.drawing = function drawing (drawing) {
 	this.drawings.push(drawing);
 	this.drawDrawing(this.bCtx, drawing);
+};
+
+DrawTogheter.prototype.alldrawings = function drawings (drawings) {
+	this.drawings = drawings;
+	this.drawDrawings(this.bCtx, this.drawings);
 };
 
 DrawTogheter.prototype.drawLine = function (ctx, sx, sy, ex, ey, size, color) {
@@ -189,6 +195,7 @@ DrawTogheter.prototype.tools.brush = function (event) {
 	if (event.type === 'mousedown' || event.type === 'touchstart') {
 		this.brushing = true;
 		this.lastPoint = [relativeX, relativeY];
+		this.addNewDot(relativeX, relativeY);
 	}
 	if (event.type === 'mouseup' || event.type === 'touchend' || event.type === 'mouseleave') {
 		delete this.brushing;

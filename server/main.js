@@ -8,6 +8,18 @@ var database = mysql.createConnection({
 });
 
 io.on('connection', function (socket) {
+    database.query('SELECT * FROM drawings WHERE now > NOW() - INTERVAL 1 DAY', function (err, rows, fields) {
+        var drawings = [];
+        for (var d = 0; d < rows.length; d++) {
+            if (typeof rows[d].x2 === 'number') {
+                drawings[d] = [rows[d].dtype, [rows[d].x1, rows[d].y1], [rows[d].x2, rows[d].y2], rows[d].size, rows[d].color];
+            } else {
+                drawings[d] = [rows[d].dtype, rows[d].x1, rows[d].y1, rows[d].size, rows[d].color];
+            }
+        }
+        socket.emit('drawings', drawings);
+    });
+
     socket.on('drawing', function (drawing, callback) {
         if (typeof drawing !== 'object') {
             console.log("Someone send a non object as drawing", drawing);
@@ -38,6 +50,7 @@ io.on('connection', function (socket) {
 
         normalizedDrawing.size = drawing[3];
         normalizedDrawing.color = drawing[4];
+        normalizedDrawing.now = new Date();
 
         database.query('INSERT INTO drawings SET ?', normalizedDrawing, function (err) {
             if (err) {
