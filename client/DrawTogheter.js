@@ -46,6 +46,15 @@ DrawTogheter.prototype.connect = function connect (server) {
 	this.socket = io(server);
 	this.socket.on("drawing", this.drawing.bind(this));
 	this.socket.on("drawings", this.alldrawings.bind(this));
+	this.socket.emit("join", "main");
+};
+
+DrawTogheter.prototype.changeRoom = function changeRoom (room) {
+	this.socket.emit("join", room);
+};
+
+DrawTogheter.prototype.changeName = function changeName (name) {
+	this.socket.emit("changeName", name);
 };
 
 DrawTogheter.prototype.setTool = function setTool (tool) {

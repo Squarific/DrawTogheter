@@ -30,7 +30,7 @@ html, body {
 	background:rgb(104, 127, 141);
 }
 
-.sizeinputcontainer {
+.sizeinputcontainer, .roominputcontaner {
 	display:inline-block;
 	margin-left:50px;
 	margin-right:10px;

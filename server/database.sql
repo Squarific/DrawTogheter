@@ -11,3 +11,11 @@ CREATE TABLE IF NOT EXISTS drawings (
     now DATETIME
 	PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS msg (
+    id BIGINT AUTO_INCREMENT,
+    name VARCHAR(255),
+    msg TEXT,
+    now DATETIME,
+    PRIMARY KEY (id)
+);

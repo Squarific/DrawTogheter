@@ -13,9 +13,14 @@
 			<div class="toolbutton active" onclick="drawTogheter.setTool('brush'); activate(this)">Brush</div>
 			<div class="sizeinputcontainer">
 				Brush Size:
-				<input value="5" type="number" class="sizeinput" onchange="drawTogheter.setToolSize(parseInt(this.value))"/>
+				<input value="5" type="number" class="sizeinput" onchange="drawTogheter.setToolSize(parseInt(this.value))" onkeyup="drawTogheter.setToolSize(parseInt(this.value))"/>
 			</div>
 			<input class="colorbutton" type="color" value="#F0BC11" onchange="drawTogheter.setToolColor(this.value);"/>
+			<div class="roominputcontaner">
+				Go to a different room:
+				<input id="roominput" value="main" />
+				<div onclick="drawTogheter.changeRoom(document.getElementById('roominput').value)" class="toolbutton">Change room</div>
+			</div>
 		</div>
 		<div id="drawregion"></div>
 		<div class="projects">
