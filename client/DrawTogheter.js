@@ -196,7 +196,8 @@ DrawTogheter.prototype.tools.brush = function (event) {
 	}
 
 	if (event.type === 'mousemove' || event.type === 'touchmove') {
-		if (this.brushing) {
+		if (this.brushing || event.type === 'touchmove') {
+			this.lastPoint = this.lastPoint || [relativeX, relativeY];
 			// If the distance is bigger than half the toolSize we draw a line
 			if (this.sqDistance(this.lastPoint, [relativeX, relativeY]) > (this.toolSize * this.toolSize) / 4) {
 				this.addNewLine(this.lastPoint, [relativeX, relativeY], this.toolSize * 2);
