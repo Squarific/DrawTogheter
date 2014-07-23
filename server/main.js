@@ -13,7 +13,7 @@ io.on('connection', function (socket) {
     console.log("New connectedion: " + socket.dName);
 	socket.emit('name', socket.dName);
 	socket.emit('chat', 'Welcome to drawtogheter');
-	socket.emit('chat', 'This is an opensource prject, the source code can be found here: https://github.com/Squarific/DrawTogheter');
+	socket.emit('chat', 'This is an opensource project, the source code can be found here: https://github.com/Squarific/DrawTogheter');
 	socket.emit('chat', 'If you like this project, please share it with your friends.');
 	socket.emit('chat', 'If you want to see new features, consider donating: 148a4MsNDoRh7cpCidxUNwM63eQr1UNtkb.');
 
