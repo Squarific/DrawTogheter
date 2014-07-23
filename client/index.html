@@ -7,7 +7,7 @@
 		<meta name="viewport" content="width=device-width">
 	</head>
 	<body>
-		<div class="tools">
+		<div id='tools' class="tools">
 			<div class="toolbutton" onclick="drawTogheter.setTool('grab'); activate(this)">Grab</div>
 			<div class="toolbutton" onclick="drawTogheter.setTool('line'); activate(this)">Line</div>
 			<div class="toolbutton active" onclick="drawTogheter.setTool('brush'); activate(this)">Brush</div>
@@ -76,6 +76,15 @@
 		<script src="polyfill.js"></script>
 		<script src="http://drawtogheter.squarific.com:8475/socket.io/socket.io.js"></script>
 		<script src="DrawTogheter.js"></script>
+		<script>
+			function resizeDrawRegion () {
+				var tools = document.getElementById("tools");
+				var drawRegion = document.getElementById("drawregion");
+				drawRegion.style.minHeight = Math.max(400, window.innerHeight - tools.offsetHeight - 150) + 'px';
+			}
+			window.addEventListener('resize', resizeDrawRegion);
+			resizeDrawRegion();
+		</script>
 		<script>
 			function activate (target) {
 				var buttons = document.getElementsByClassName("toolbutton");
