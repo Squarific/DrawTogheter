@@ -22,6 +22,7 @@ function DrawTogheter (container, server) {
 	this.effects.addEventListener("mousedown", this.callTool.bind(this));
 	this.effects.addEventListener("mouseup", this.callTool.bind(this));
 	this.effects.addEventListener("mousemove", this.callTool.bind(this));
+	this.effects.addEventListener("mouseleave", this.callTool.bind(this));
 	this.effects.addEventListener("touchstqrt", this.callTool.bind(this));
 	this.effects.addEventListener("touchend", this.callTool.bind(this));
 	this.effects.addEventListener("touchmove", this.callTool.bind(this));
@@ -184,7 +185,7 @@ DrawTogheter.prototype.tools.brush = function (event) {
 		this.brushing = true;
 		this.lastPoint = [relativeX, relativeY];
 	}
-	if (event.type === 'mouseup' || event.type === 'touchend') {
+	if (event.type === 'mouseup' || event.type === 'touchend' || event.type === 'mouseleave') {
 		delete this.brushing;
 		delete this.lastPoint;
 	}
