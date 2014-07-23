@@ -1,10 +1,29 @@
 function DrawTogheter (container, server) {
 	this.container = container;
 	this.container.style.position = "relative";
+	this.chatcontainer = this.container.appendChild(document.createElement('div'));
+	this.canvascontainer = this.container.appendChild(document.createElement('div'));
 
-	this.background = container.appendChild(document.createElement("canvas"));
-	this.canvas = container.appendChild(document.createElement("canvas"));
-	this.effects = container.appendChild(document.createElement("canvas"));
+	this.messages = this.chatcontainer.appendChild(document.createElement('div'));
+	this.messageinputcontainer = this.chatcontainer.appendChild(document.createElement('div'));
+	this.messageinput = this.messageinputcontainer.appendChild(document.createElement('input'));
+	this.messageinputbutton = this.messageinputcontainer.appendChild(document.createElement('div'));
+	this.messageinputbutton.innerText = 'Send';
+	this.messageinputbutton.addEventListener('click', this.sendMessage.bind(this));
+	this.messageinput.addEventListener('keypress', function (event) {
+		if (event.keyCode === 13) this.sendMessage();
+	}.bind(this));
+
+	this.chatcontainer.className = 'chatcontainer';
+	this.canvascontainer.className = 'canvascontainer';
+	this.messages.className = 'messages';
+	this.messageinputcontainer.className = 'messageinputcontainer';
+	this.messageinput.className = 'messageinput';
+	this.messageinputbutton.className = 'messageinputbutton toolbutton';
+
+	this.background = this.canvascontainer.appendChild(document.createElement("canvas"));
+	this.canvas = this.canvascontainer.appendChild(document.createElement("canvas"));
+	this.effects = this.canvascontainer.appendChild(document.createElement("canvas"));
 
 	this.setCanvasPosition(this.canvas);
 	this.setCanvasPosition(this.effects);
@@ -46,7 +65,24 @@ DrawTogheter.prototype.connect = function connect (server) {
 	this.socket = io(server);
 	this.socket.on("drawing", this.drawing.bind(this));
 	this.socket.on("drawings", this.alldrawings.bind(this));
+	this.socket.on("chat", this.chat.bind(this));
 	this.socket.emit("join", "main");
+};
+
+DrawTogheter.prototype.chat = function chat (msg) {
+	var msgContainer = this.messages.appendChild(document.createElement('div'));
+	msgContainer.className = "messagecontainer";
+	if (typeof msg === "string") {
+		msgContainer.appendChild(document.createTextNode(msg));
+	} else {
+		var name = msgContainer.appendChild(document.createElement('div'));
+		name.className = "name";
+		name.appendChild(document.createTextNode(msg.name + ':'))
+		var message = msgContainer.appendChild(document.createElement('div'));
+		message.className = "message";
+		message.appendChild(document.createTextNode(msg.msg))
+	}
+	this.messages.scrollTop = this.messages.scrollHeight;
 };
 
 DrawTogheter.prototype.changeRoom = function changeRoom (room) {
@@ -55,6 +91,12 @@ DrawTogheter.prototype.changeRoom = function changeRoom (room) {
 
 DrawTogheter.prototype.changeName = function changeName (name) {
 	this.socket.emit("changeName", name);
+};
+
+DrawTogheter.prototype.sendMessage = function sendMessage () {
+	if (this.messageinput.value == '') return;
+	this.socket.emit("chat", this.messageinput.value);
+	this.messageinput.value = '';
 };
 
 DrawTogheter.prototype.setTool = function setTool (tool) {
@@ -235,12 +277,12 @@ DrawTogheter.prototype.callTool = function () {
 };
 
 DrawTogheter.prototype.resizeHandler = function () {
-	this.background.width = this.container.offsetWidth;
-	this.background.height = this.container.offsetHeight;
-	this.canvas.width = this.container.offsetWidth;
-	this.canvas.height = this.container.offsetHeight;
-	this.effects.width = this.container.offsetWidth;
-	this.effects.height = this.container.offsetHeight;
+	this.background.width = this.canvascontainer.offsetWidth;
+	this.background.height = this.canvascontainer.offsetHeight;
+	this.canvas.width = this.canvascontainer.offsetWidth;
+	this.canvas.height = this.canvascontainer.offsetHeight;
+	this.effects.width = this.canvascontainer.offsetWidth;
+	this.effects.height = this.canvascontainer.offsetHeight;
 	this.drawDrawings(this.ctx, this.localDrawings);
 	this.drawDrawings(this.bCtx, this.drawings);
 };

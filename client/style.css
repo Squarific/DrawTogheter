@@ -9,6 +9,62 @@ html, body {
 	background:rgb(238, 238, 238);
 }
 
+.messages {
+	height:85%;
+	overflow-y:auto;
+	overflow-x:hidden;
+	word-wrap:break-word;
+}
+
+.message, .name {
+	display:inline-block;
+	margin-right:10px;
+	word-wrap:break-word;
+}
+
+.messagecontainer {
+	color:white;
+	padding:3px;
+	background:gray;
+	word-wrap:break-word;
+}
+
+.messagecontainer:nth-child(even) {
+	background:lightgray;
+}
+
+.messageinputcontainer {
+	background:gray;
+	height:15%;
+}
+
+.messageinput {
+	width:70%;
+	padding:5px;
+	margin-right:2%;
+	margin-left:2%;
+	font-size:18px;
+}
+
+.chatcontainer {
+	position:absolute;
+	width:30%;
+	right:0;
+	top:0;
+	bottom:0;
+	background:rgb(179, 187, 192);
+	border-left:3px solid gray;
+	box-sizing:border-box;
+}
+
+.canvascontainer {
+	position:absolute;
+	width:70%;
+	left:0;
+	top:0;
+	bottom:0;
+}
+
 .tools {
 	text-align:center;
 	background:rgb(110, 138, 153);
@@ -28,6 +84,22 @@ html, body {
 
 .toolbutton:hover {
 	background:rgb(104, 127, 141);
+}
+
+.messageinputbutton {
+	width:20%;
+	height:100%;
+	text-align:center;
+	color:white;
+	background:rgb(123, 155, 172);
+	font-weight:bold;
+	padding:20px;
+	font-size:18px;
+	box-sizing:border-box;
+}
+
+.messageinputbutton:hover {
+	background:rgb(61, 82, 93);
 }
 
 .sizeinputcontainer, .roominputcontaner {

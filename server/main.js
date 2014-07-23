@@ -13,6 +13,8 @@ io.on('connection', function (socket) {
     console.log("New connectedion: " + socket.dName);
 
     socket.on('chat', function (msg) {
+		if (msg == "") return;
+
 		var msgObj = {
 			name: socket.dName,
 			msg: msg
@@ -20,7 +22,7 @@ io.on('connection', function (socket) {
 
         io.to(socket.drawroom).emit("chat", msgObj);
         console.log('Chat: ' + socket.dName + ': ' + msg);
-		msbObj.now = new Date();
+		msgObj.now = new Date();
 
         database.query('INSERT INTO msg SET ?', msgObj, function (err) {
 			if (err) console.log(err);
