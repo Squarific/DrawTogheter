@@ -43,13 +43,13 @@ io.on('connection', function (socket) {
 
 	socket.on('disconnect', function () {
 		io.to(socket.drawroom).emit("chat", socket.dName + " left.");
-		console.log(socket.dName + " left.");
+		//console.log(socket.dName + " left.");
 	});
 
     socket.on('join', function (room) {
 		var number = 1;
-		if (Object.keys(io.nsps['/'].adapter.rooms[room] || {}).length > 40) {
-			while (Object.keys(io.nsps['/'].adapter.rooms[room + number] || {}).length > 40) {
+		if (Object.keys(io.nsps['/'].adapter.rooms[room] || {}).length > 9) {
+			while (Object.keys(io.nsps['/'].adapter.rooms[room + number] || {}).length > 9) {
 				number++;
 			}
 			socket.emit('chat', room + ' was full, you have been moved to ' + room + number);
@@ -66,6 +66,7 @@ io.on('connection', function (socket) {
 		socket.join(socket.drawroom);
 		io.to(socket.drawroom).emit("chat", socket.dName + " joined " + socket.drawroom + ". There are now " + Object.keys(io.nsps['/'].adapter.rooms[socket.drawroom] || {}).length + ' users in this room.');
 		console.log(socket.dName + " joined " + socket.drawroom + ". There are now " + Object.keys(io.nsps['/'].adapter.rooms[socket.drawroom] || {}).length + ' users in this room.');
+		socket.emit('room', socket.drawroom);
 
         /*database.query('SELECT * FROM (SELECT * FROM drawings WHERE now > NOW() - INTERVAL 1 HOUR AND room = ? ORDER BY now DESC LIMIT 0) AS T ORDER BY now ASC', [socket.drawroom], function (err, rows, fields) {
             if (err) {
@@ -84,24 +85,25 @@ io.on('connection', function (socket) {
             socket.join(socket.drawroom);
             io.to(socket.drawroom).emit("chat", socket.dName + " joined " + socket.drawroom + ".");
 			console.log(socket.dName + " joined " + socket.drawroom + ".");
+			socket.emit('room', socket.drawroom);
         });*/
     });
 
     socket.on('drawing', function (drawing, callback) {
         if (typeof drawing !== 'object') {
-            console.log("Someone send a non object as drawing", drawing);
+            console.log("Someone send a non object as drawing");
 			callback();
             return;
         }
 
         if (drawing[0] < 0 || drawing[0] > 1) {
-            console.log("Someone send an unknown drawing type", drawing);
+            console.log("Someone send an unknown drawing type");
 			callback();
             return;
         }
 
 		if (drawing[3] < 0 || drawing[3] > 50) {
-			console.log("Someone drew a negative size or too big", drawing);
+			//console.log("Someone drew a negative size or too big");
 			callback();
 			return;
 		}

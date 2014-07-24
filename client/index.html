@@ -94,6 +94,9 @@
 				target.classList.add("active");
 			}
 			var drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://drawtogheter.squarific.com:8475");
+			drawTogheter.socket.on('room', function (room) {
+				document.getElementById('roominput').value = room;
+			});
 		</script>
 		<!-- Go to www.addthis.com/dashboard to customize your tools -->
 		<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-53c4fbf2311fe8f1"></script>
