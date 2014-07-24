@@ -1,10 +1,8 @@
 # DrawTogheter #
 
-Source code of http://squarific.com/drawTogheter
-
 ## Demo ##
 
-http://www.squarific.com
+http://squarific.com/drawTogheter
 
 ## Donate ##
 
