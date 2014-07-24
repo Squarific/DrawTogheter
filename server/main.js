@@ -7,6 +7,7 @@ var database = mysql.createConnection({
 	password: 'secret',
 	database: "drawtogheter"
 });
+var users = 0;
 
 io.on('connection', function (socket) {
     socket.dName = utils.randomString(8);
@@ -46,11 +47,27 @@ io.on('connection', function (socket) {
 	});
 
     socket.on('join', function (room) {
+		var number = 1;
+		if (Object.keys(io.nsps['/'].adapter.rooms[room] || {}).length > 40) {
+			while (Object.keys(io.nsps['/'].adapter.rooms[room + number] || {}).length > 40) {
+				number++;
+			}
+			socket.emit('chat', room + ' was full, you have been moved to ' + room + number);
+			console.log(room + ' was full, ' + socket.dName + ' has been moved to ' + room + number);
+			room += number;
+		}
 		io.to(socket.drawroom).emit("chat", socket.dName + " left " + socket.drawroom + ".");
 		console.log(socket.dName + " left " + socket.drawroom + ".");
         socket.leave(socket.drawroom);
         socket.drawroom = room;
-        database.query('SELECT * FROM (SELECT * FROM drawings WHERE now > NOW() - INTERVAL 1 HOUR AND room = ? ORDER BY now DESC LIMIT 10000) AS T ORDER BY now ASC', [socket.drawroom], function (err, rows, fields) {
+
+		//REMOVE WHEN REACTIVATING DATABASE
+		socket.emit('drawings', []);
+		socket.join(socket.drawroom);
+		io.to(socket.drawroom).emit("chat", socket.dName + " joined " + socket.drawroom + ". There are now " + Object.keys(io.nsps['/'].adapter.rooms[socket.drawroom] || {}).length + ' users in this room.');
+		console.log(socket.dName + " joined " + socket.drawroom + ". There are now " + Object.keys(io.nsps['/'].adapter.rooms[socket.drawroom] || {}).length + ' users in this room.');
+
+        /*database.query('SELECT * FROM (SELECT * FROM drawings WHERE now > NOW() - INTERVAL 1 HOUR AND room = ? ORDER BY now DESC LIMIT 0) AS T ORDER BY now ASC', [socket.drawroom], function (err, rows, fields) {
             if (err) {
 				console.log(err);
 				return;
@@ -67,7 +84,7 @@ io.on('connection', function (socket) {
             socket.join(socket.drawroom);
             io.to(socket.drawroom).emit("chat", socket.dName + " joined " + socket.drawroom + ".");
 			console.log(socket.dName + " joined " + socket.drawroom + ".");
-        });
+        });*/
     });
 
     socket.on('drawing', function (drawing, callback) {
@@ -114,11 +131,12 @@ io.on('connection', function (socket) {
         database.query('INSERT INTO drawings SET ?', normalizedDrawing, function (err) {
             if (err) {
                 console.log(err);
-                callback();
+				callback();
                 return;
             }
-            io.to(socket.drawroom).emit('drawing', drawing);
-            callback();
+
+			io.to(socket.drawroom).emit('drawing', drawing);
+			callback();
         });
     });
 });
