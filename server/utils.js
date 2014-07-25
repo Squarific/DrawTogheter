@@ -16,6 +16,7 @@ utils.socketJoinRoom = function socketJoinRoom (io, socket, room, drawings) {
 	io.to(socket.drawroom).emit("chat", socket.dName + " joined " + socket.drawroom + ". There are now " + Object.keys(io.nsps['/'].adapter.rooms[socket.drawroom] || {}).length + ' users in this room.');
 	console.log(socket.dName + " joined " + socket.drawroom + ". There are now " + Object.keys(io.nsps['/'].adapter.rooms[socket.drawroom] || {}).length + ' users in this room.');
 	socket.emit('room', socket.drawroom);
+	socket.emit('chat', 'You are ready to draw.');
 };
 
 utils.convertRowsToDrawings = function convertRowsToDrawings (rows) {
