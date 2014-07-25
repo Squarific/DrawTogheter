@@ -4,7 +4,7 @@ var mysql = require("mysql");
 var database = mysql.createConnection({
 	host: "localhost",
 	user: "drawtogheter",
-	password: 'secret',
+	password: 'abc',
 	database: "drawtogheter"
 });
 var users = 0;
@@ -58,16 +58,26 @@ io.on('connection', function (socket) {
 			console.log(room + ' was full, ' + socket.dName + ' has been moved to ' + room + number);
 			room += number;
 		}
-		io.to(socket.drawroom).emit("chat", socket.dName + " left " + socket.drawroom + ".");
-		console.log(socket.dName + " left " + socket.drawroom + ".");
-        socket.leave(socket.drawroom);
-        socket.drawroom = room;
 
-		socket.emit('drawings', cache.get(socket.drawroom));
-		socket.join(socket.drawroom);
-		io.to(socket.drawroom).emit("chat", socket.dName + " joined " + socket.drawroom + ". There are now " + Object.keys(io.nsps['/'].adapter.rooms[socket.drawroom] || {}).length + ' users in this room.');
-		console.log(socket.dName + " joined " + socket.drawroom + ". There are now " + Object.keys(io.nsps['/'].adapter.rooms[socket.drawroom] || {}).length + ' users in this room.');
-		socket.emit('room', socket.drawroom);
+		if (socket.drawRoom) {
+			io.to(socket.drawroom).emit("chat", socket.dName + " left " + socket.drawroom + ".");
+			console.log(socket.dName + " left " + socket.drawroom + ".");
+	        socket.leave(socket.drawroom);
+		}
+
+		if (!cache.exists(socket.drawroom)) {
+			database.query('SELECT * FROM (SELECT * FROM drawings WHERE now > NOW() - INTERVAL 1 HOUR AND room = ? ORDER BY now DESC LIMIT 8000) AS T ORDER BY now ASC', [room], function (err, rows, fields) {
+				if (err) {
+					console.log('Drawings select error on join', err);
+					return;
+				}
+				var drawings = utils.convertRowsToDrawings(rows);
+				cache.pushMultiTo(room, drawings);
+				utils.socketJoinRoom(io, socket, room, drawings);
+			});
+		} else {
+			utils.socketJoinRoom(io, socket, room, cache.get(room));
+		}
     });
 
     socket.on('drawing', function (drawing, callback) {
@@ -111,15 +121,15 @@ io.on('connection', function (socket) {
         normalizedDrawing.room = socket.drawroom;
         normalizedDrawing.now = new Date();
 
+		io.to(socket.drawroom).emit('drawing', drawing);
+		callback();
+
         database.query('INSERT INTO drawings SET ?', normalizedDrawing, function (err) {
             if (err) {
                 console.log(err);
-				callback();
                 return;
             }
 
-			io.to(socket.drawroom).emit('drawing', drawing);
-			callback();
 			cache.pushTo(socket.drawroom, drawing);
         });
     });
