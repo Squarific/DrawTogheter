@@ -21,7 +21,7 @@ Cache.prototype.pushTo = function pushTo (category, value) {
 
 Cache.prototype.pushMultiTo = function pushTo (category, values) {
     this.cache[category] = this.cache[category] || [];
-    this.cache[category].concat(values);
+    this.cache[category] = this.cache[category].concat(values);
     if (this.cache[category].length > this.max) {
         this.cache[category].splice(0, Math.min(0, this.max - values.length));
     }
