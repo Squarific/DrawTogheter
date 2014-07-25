@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS drawings (
     color VARCHAR(7),
     room VARCHAR(255),
     now DATETIME,
-	PRIMARY KEY (id)
+	PRIMARY KEY (id),
+    INDEX (now, room)
 );
 
 CREATE TABLE IF NOT EXISTS msg (
