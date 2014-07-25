@@ -74,10 +74,13 @@ DrawTogheter.prototype.connect = function connect (server) {
 	}.bind(this));
 	this.socket.on('reconnect', function () {
 		this.chat('You have been reconnected, joining main room');
-		this.socket.emit("join", "main");
+		this.socket.emit("join", this.room || 'main');
 	}.bind(this));
 	this.socket.on('connect', function () {
 		this.chat('You have been connected, joining main room');
+	}.bind(this));
+	this.socket.on('room', function (room) {
+		this.room = room;
 	}.bind(this));
 	this.socket.emit("join", "main");
 };
