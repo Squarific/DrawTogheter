@@ -9,7 +9,7 @@
 	</head>
 	<body>
 		<div id='tools' class="tools">
-			<div class="toolbutton" onclick="drawTogheter.setTool('grab'); activate(this)">Grab</div>
+			<!--<div class="toolbutton" onclick="drawTogheter.setTool('grab'); activate(this)">Grab</div>-->
 			<div class="toolbutton" onclick="drawTogheter.setTool('line'); activate(this)">Line</div>
 			<div class="toolbutton active" onclick="drawTogheter.setTool('brush'); activate(this)">Brush</div>
 			<div class="sizeinputcontainer">
@@ -75,7 +75,7 @@
 			</a>
 		</div>
 		<script src="polyfill.js"></script>
-		<script src="http://drawtogheter.squarific.com:8475/socket.io/socket.io.js"></script>
+		<script src="http://127.0.0.1:8475/socket.io/socket.io.js"></script>
 		<script src="DrawTogheter.js?v=2"></script>
 		<script>
 			function resizeDrawRegion () {
@@ -94,7 +94,7 @@
 				}
 				target.classList.add("active");
 			}
-			var drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://drawtogheter.squarific.com:8475");
+			var drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://127.0.0.1:8475");
 			drawTogheter.socket.on('room', function (room) {
 				document.getElementById('roominput').value = room;
 			});
