@@ -4,12 +4,13 @@ var mysql = require("mysql");
 var database = mysql.createConnection({
 	host: "localhost",
 	user: "drawtogheter",
-	password: 'abc',
+	password: 'secret',
 	database: "drawtogheter"
 });
-var users = 0;
 var Cache = require('./cache.js');
-var cache = new Cache(8000);
+var cache = new Cache(20000);
+
+var callbacksOnRoomDone = {};
 
 io.on('connection', function (socket) {
     socket.dName = utils.randomString(8);
@@ -59,21 +60,43 @@ io.on('connection', function (socket) {
 			room += number;
 		}
 
+		socket.leave(socket.drawroom);
+
 		if (socket.drawRoom) {
 			io.to(socket.drawroom).emit("chat", socket.dName + " left " + socket.drawroom + ".");
 			console.log(socket.dName + " left " + socket.drawroom + ".");
-	        socket.leave(socket.drawroom);
 		}
 
-		if (!cache.exists(socket.drawroom)) {
-			database.query('SELECT * FROM (SELECT * FROM drawings WHERE now > NOW() - INTERVAL 1 HOUR AND room = ? ORDER BY now DESC LIMIT 8000) AS T ORDER BY now ASC', [room], function (err, rows, fields) {
+		if (!cache.exists(room)) {
+			if (callbacksOnRoomDone[room]) {
+				socket.emit('chat', 'The room is being loaded. Please wait a few seconds.');
+				callbacksOnRoomDone[room].push(function (room) {
+					utils.socketJoinRoom(io, socket, room, cache.get(room));
+				});
+				return;
+			}
+
+			socket.emit('chat', 'The room is being loaded. Please wait a few seconds.');
+			console.log('Room ' + room + ' is being loaded.');
+
+			callbacksOnRoomDone[room] = [function (room) {
+				utils.socketJoinRoom(io, socket, room, cache.get(room));
+			}];
+
+			database.query('SELECT * FROM (SELECT dtype, x1, y1, x2, y2, size, color FROM drawings WHERE room = ? ORDER BY now DESC LIMIT 20000) AS T ORDER BY now ASC', [room], function (err, rows, fields) {
 				if (err) {
 					console.log('Drawings select error on join', err);
 					return;
 				}
-				var drawings = utils.convertRowsToDrawings(rows);
-				cache.pushMultiTo(room, drawings);
-				utils.socketJoinRoom(io, socket, room, drawings);
+
+				cache.pushMultiTo(room, utils.convertRowsToDrawings(rows));
+				console.log('Room ' + room + ' loaded');
+
+				for (var k = 0; k < callbacksOnRoomDone[room].length; k++) {
+					callbacksOnRoomDone[room][k](room);
+				}
+
+				delete callbacksOnRoomDone[room];
 			});
 		} else {
 			utils.socketJoinRoom(io, socket, room, cache.get(room));
