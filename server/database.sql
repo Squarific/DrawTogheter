@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS drawings (
     room VARCHAR(255),
     now DATETIME,
 	PRIMARY KEY (id),
-    INDEX (room)
+    INDEX (now, room)
 );
 
 CREATE TABLE IF NOT EXISTS msg (
