@@ -8,6 +8,8 @@ var database = mysql.createConnection({
 	database: "drawtogheter"
 });
 var users = 0;
+var Cache = require('./cache.js');
+var cache = new Cache(8000);
 
 io.on('connection', function (socket) {
     socket.dName = utils.randomString(8);
@@ -61,32 +63,11 @@ io.on('connection', function (socket) {
         socket.leave(socket.drawroom);
         socket.drawroom = room;
 
-		//REMOVE WHEN REACTIVATING DATABASE
-		socket.emit('drawings', []);
+		socket.emit('drawings', cache.get(socket.drawroom));
 		socket.join(socket.drawroom);
 		io.to(socket.drawroom).emit("chat", socket.dName + " joined " + socket.drawroom + ". There are now " + Object.keys(io.nsps['/'].adapter.rooms[socket.drawroom] || {}).length + ' users in this room.');
 		console.log(socket.dName + " joined " + socket.drawroom + ". There are now " + Object.keys(io.nsps['/'].adapter.rooms[socket.drawroom] || {}).length + ' users in this room.');
 		socket.emit('room', socket.drawroom);
-
-        /*database.query('SELECT * FROM (SELECT * FROM drawings WHERE now > NOW() - INTERVAL 1 HOUR AND room = ? ORDER BY now DESC LIMIT 0) AS T ORDER BY now ASC', [socket.drawroom], function (err, rows, fields) {
-            if (err) {
-				console.log(err);
-				return;
-			}
-			var drawings = [];
-            for (var d = 0; d < rows.length; d++) {
-                if (typeof rows[d].x2 === 'number') {
-                    drawings[d] = [rows[d].dtype, [rows[d].x1, rows[d].y1], [rows[d].x2, rows[d].y2], rows[d].size, rows[d].color];
-                } else {
-                    drawings[d] = [rows[d].dtype, rows[d].x1, rows[d].y1, rows[d].size, rows[d].color];
-                }
-            }
-            socket.emit('drawings', drawings);
-            socket.join(socket.drawroom);
-            io.to(socket.drawroom).emit("chat", socket.dName + " joined " + socket.drawroom + ".");
-			console.log(socket.dName + " joined " + socket.drawroom + ".");
-			socket.emit('room', socket.drawroom);
-        });*/
     });
 
     socket.on('drawing', function (drawing, callback) {
@@ -139,6 +120,7 @@ io.on('connection', function (socket) {
 
 			io.to(socket.drawroom).emit('drawing', drawing);
 			callback();
+			cache.pushTo(socket.drawroom, drawing);
         });
     });
 });
