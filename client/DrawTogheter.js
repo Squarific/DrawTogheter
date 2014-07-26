@@ -77,12 +77,14 @@ DrawTogheter.prototype.connect = function connect (server) {
 		this.socket.emit("join", this.room || 'main');
 	}.bind(this));
 	this.socket.on('connect', function () {
-		this.chat('You have been connected, joining main room');
+		this.chat('You have been connected.');
 	}.bind(this));
 	this.socket.on('room', function (room) {
+		location.hash = room;
 		this.room = room;
+		this.chat('You can share this room: ' + location.href);
 	}.bind(this));
-	this.socket.emit("join", "main");
+	this.socket.emit("join", location.hash.substring(1) || "main");
 };
 
 DrawTogheter.prototype.chat = function chat (msg) {
