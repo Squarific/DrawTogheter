@@ -9,6 +9,33 @@ html, body {
 	background:rgb(238, 238, 238);
 }
 
+.closebutton {
+	position:absolute;
+	right:5px;
+	top:5px;
+	cursor:pointer;
+	padding:8px;
+}
+
+.donateoverlay {
+	display:none;
+	position:fixed;
+	font-size:22px;
+	left:5%;
+	right:5%;
+	top:6%;
+	bottom:8%;
+	padding:3%;
+	background:rgba(166, 209, 155, 0.95);
+	border:3px solid rgb(51, 78, 46);
+	overflow:auto;
+	color:rgb(51, 78, 46);
+}
+
+.done {
+	text-decoration: line-through;
+}
+
 .messages {
 	height:85%;
 	overflow-y:auto;
