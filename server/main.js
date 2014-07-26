@@ -8,7 +8,7 @@ var database = mysql.createConnection({
 	database: "drawtogheter"
 });
 var Cache = require('./cache.js');
-var cache = new Cache(20000);
+var cache = new Cache(8000);
 
 var callbacksOnRoomDone = {};
 
@@ -83,7 +83,7 @@ io.on('connection', function (socket) {
 				utils.socketJoinRoom(io, socket, room, cache.get(room));
 			}];
 
-			database.query('SELECT * FROM (SELECT dtype, x1, y1, x2, y2, size, color FROM drawings WHERE room = ? ORDER BY now DESC LIMIT 20000) AS T ORDER BY now ASC', [room], function (err, rows, fields) {
+			database.query('SELECT * FROM (SELECT * FROM drawings WHERE room = ? ORDER BY now DESC LIMIT 8000) AS T ORDER BY now ASC', [room], function (err, rows, fields) {
 				if (err) {
 					console.log('Drawings select error on join', err);
 					return;
