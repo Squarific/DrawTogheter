@@ -7,7 +7,7 @@ http://squarific.com/drawTogheter
 ## Donate ##
 
 If you want to see new feature or help keep the server up (+/- 40 dollar/month)
-then you can help by donating with bitcoins: [148a4MsNDoRh7cpCidxUNwM63eQr1UNtkb](bitcoin://148a4MsNDoRh7cpCidxUNwM63eQr1UNtkb) 
+then you can help by donating with bitcoins: [148a4MsNDoRh7cpCidxUNwM63eQr1UNtkb](bitcoin://148a4MsNDoRh7cpCidxUNwM63eQr1UNtkb)
 
 ## How to use ##
 
@@ -15,6 +15,8 @@ then you can help by donating with bitcoins: [148a4MsNDoRh7cpCidxUNwM63eQr1UNtkb
 
 
 Install `node`, `npm` and the following npm modules: `mysql`, `socket.io`.
+
+Edit the mysql data in main.js and run the databse.sql file on your database.
 
 Then you can startup the server using `node main.js` after you cd into the server folder.
 
