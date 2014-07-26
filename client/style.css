@@ -9,8 +9,17 @@ html, body {
 	background:rgb(238, 238, 238);
 }
 
+.flashdelay {
+	transition-duration:200ms;
+}
+
+.flash {
+	background:orange;
+}
+
 .closebutton {
 	position:absolute;
+	font-size:200%;
 	right:5px;
 	top:5px;
 	cursor:pointer;
