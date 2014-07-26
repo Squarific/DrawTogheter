@@ -2,14 +2,18 @@
 <html>
 	<head>
 		<title>Draw togheter</title>
-		<link rel="stylesheet" href="style.css?v=2">
+		<link rel="stylesheet" href="style.css?v=3">
 		<link rel="stylesheet" href="projects.css">
 		<meta name="viewport" content="width=device-width">
 		<meta name="description" content="Draw togheter online with strangers or friends">
 	</head>
 	<body>
 		<div id='tools' class="tools">
-			<div class="toolbutton" onclick="donate()">Donate</div>
+			<iframe src="http://ghbtns.com/github-btn.html?user=squarific&repo=drawtogheter&type=watch&count=true&size=large"
+  			allowtransparency="true" frameborder="0" scrolling="0" width="170" height="30" style="vertical-align:middle;"></iframe>
+			<iframe src="http://ghbtns.com/github-btn.html?user=squarific&repo=drawtogheter&type=fork&count=true&size=large"
+			allowtransparency="true" frameborder="0" scrolling="0" width="170" height="30" style="vertical-align:middle;"></iframe>
+			<div id="donatebutton" class="toolbutton flashdelay" onclick="donate()">Donate</div>
 			<!--<div class="toolbutton" onclick="drawTogheter.setTool('grab'); activate(this)">Grab</div>-->
 			<div class="toolbutton" onclick="drawTogheter.setTool('line'); activate(this)">Line</div>
 			<div class="toolbutton active" onclick="drawTogheter.setTool('brush'); activate(this)">Brush</div>
@@ -87,14 +91,13 @@
 			window.addEventListener('resize', resizeDrawRegion);
 			resizeDrawRegion();
 		</script>
-		<script src="utils.js"></script>
+		<script src="utils.js?v=1"></script>
 		<script>
 			var drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://drawtogheter.squarific.com:8475");
 			drawTogheter.socket.on('room', function (room) {
 				document.getElementById('roominput').value = room;
 			});
-
-		setTimeout(donate, 15 * 60 * 1000);
+			setInterval(flashDonate, 5 * 60 * 1000);
 		</script>
 		<!-- Go to www.addthis.com/dashboard to customize your tools -->
 		<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-53c4fbf2311fe8f1"></script>
@@ -103,7 +106,7 @@
 			<span style="font-size:200%; font-weight:bold;">I hope you are enjoying the app!</span><br/><br/>
 			<span>I definitely enjoyed making it. I want to ask your help though.</span><br/>
 			<span>Keeping this up costs money and I want to continue working on this.</span><br/><br/>
-			<span style="font-size:120%;">Share this website with your friends and if possible donate some money.</span><br/><br/>
+			<span style="font-size:120%;">Share this website with your friends, help program if you can and if possible donate some money.</span><br/><br/>
 			<script data-gittip-username="Squarific" src="//gttp.co/v1.js"></script>
 			<script id='fblwuvo'>
 				(function(i){var f,s=document.getElementById(i);f=document.createElement('iframe');f.src='//api.flattr.com/button/view/?uid=Squarific&url='+encodeURIComponent(document.URL);f.title='Flattr';f.height=62;f.width=55;f.style.borderWidth=0;s.parentNode.insertBefore(f,s);})('fblwuvo');
@@ -123,7 +126,7 @@
 				<li>Private rooms</li>
 				<li>Limited amout of ink</li>
 				<li>Fullscreen and better layout</li>
-				<li>Share room links</li>
+				<li class="done">Share room links</li>
 				<li>History viewer</li>
 			</ul>
 		</div>
