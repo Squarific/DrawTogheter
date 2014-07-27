@@ -152,6 +152,8 @@ DrawTogheter.prototype.addDrawing = function addDrawing (drawing) {
 DrawTogheter.prototype.addNewLine = function addNewLine (point1, point2, size, color) {
 	var size = size || this.toolSize;
 	var color = color || this.toolColor;
+	//4000000 = 2000 * 2000
+	if (this.sqDistance(point1, point2) > 4000000) return;
 	var drawing = [0, point1, point2, size, color];
 	this.addDrawing(drawing);
 };
