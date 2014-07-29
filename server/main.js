@@ -20,9 +20,7 @@ io.on('connection', function (socket) {
     socket.dName = utils.randomString(8);
     console.log("New connectedion: " + socket.dName);
 	socket.emit('name', socket.dName);
-	socket.emit('chat', 'Source code: https://github.com/Squarific/DrawTogheter');
-	socket.emit('chat', 'Please share with your friends!');
-	socket.emit('chat', 'Want new features? Bitcoin: 148a4MsNDoRh7cpCidxUNwM63eQr1UNtkb.');
+	socket.emit('safechat', 'Drew something cool? Share it: <a href="http://www.reddit.com/r/Drawtogheter">http://www.reddit.com/r/Drawtogheter</a>');
 
     socket.on('chat', function (msg) {
 		if (msg == "") return;

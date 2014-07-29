@@ -66,6 +66,7 @@ DrawTogheter.prototype.connect = function connect (server) {
 	this.socket.on("drawing", this.drawing.bind(this));
 	this.socket.on("drawings", this.alldrawings.bind(this));
 	this.socket.on("chat", this.chat.bind(this));
+	this.socket.on("safechat", this.safechat.bind(this));
 	this.socket.on("name", function (name) {
 		document.getElementById('nameinput').value = name;
 	});
@@ -76,15 +77,33 @@ DrawTogheter.prototype.connect = function connect (server) {
 		this.chat('You have been reconnected, joining main room');
 		this.socket.emit("join", this.room || 'main');
 	}.bind(this));
-	this.socket.on('connect', function () {
-		this.chat('You have been connected.');
-	}.bind(this));
 	this.socket.on('room', function (room) {
 		location.hash = room;
 		this.room = room;
 		this.chat('You can share this room: ' + location.href);
 	}.bind(this));
 	this.socket.emit("join", location.hash.substring(1) || "main");
+};
+
+DrawTogheter.prototype.safechat = function safechat (msg) {
+	if (this.messages.scrollTop >= this.messages.scrollHeight - this.messages.offsetHeight - 10) var scroll = true;
+
+	var msgContainer = this.messages.appendChild(document.createElement('div'));
+	msgContainer.className = "messagecontainer";
+	if (typeof msg === "string") {
+		var message = msgContainer.appendChild(document.createElement('div'));
+		message.className = "message";
+		message.innerHTML = msg;
+	} else {
+		var name = msgContainer.appendChild(document.createElement('div'));
+		name.className = "name";
+		name.appendChild(document.createTextNode(msg.name + ':'))
+		var message = msgContainer.appendChild(document.createElement('div'));
+		message.className = "message";
+		message.innerHTML = msg.msg;
+	}
+
+	if (scroll) this.messages.scrollTop = this.messages.scrollHeight;
 };
 
 DrawTogheter.prototype.chat = function chat (msg) {

@@ -45,6 +45,17 @@ html, body {
 	text-decoration: line-through;
 }
 
+.message a {
+	color:rgb(233, 233, 233);
+	font-weight:bold;
+	font-size:120%;
+	text-decoration:underline;
+}
+
+.message a:hover {
+	color:white;
+}
+
 .messages {
 	height:85%;
 	overflow-y:auto;
