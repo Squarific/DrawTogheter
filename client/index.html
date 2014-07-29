@@ -79,9 +79,10 @@
 				Images generated using neural networks, you select the image the looks like you want and it will evolve. (Not fully finished)
 			</a>
 		</div>
-		<script src="polyfill.js"></script>
+		<script src="js/polyfill.js"></script>
 		<script src="http://drawtogheter.squarific.com:8475/socket.io/socket.io.js"></script>
-		<script src="DrawTogheter.js?v=4"></script>
+		<script src="js/DrawTogheter.js?v=4"></script>
+		<script src="js/utils.js?v=1"></script>
 		<script>
 			function resizeDrawRegion () {
 				var tools = document.getElementById("tools");
@@ -91,7 +92,6 @@
 			window.addEventListener('resize', resizeDrawRegion);
 			resizeDrawRegion();
 		</script>
-		<script src="utils.js?v=1"></script>
 		<script>
 			var drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://drawtogheter.squarific.com:8475");
 			drawTogheter.socket.on('room', function (room) {
