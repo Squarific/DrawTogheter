@@ -66,13 +66,17 @@ TiledCanvas.prototype.goto = function goto (x, y) {
 };
 
 TiledCanvas.prototype.execute = function execute () {
+    this.executeNoRedraw();
+    this.redraw();
+};
+
+TiledCanvas.prototype.executeNoRedraw = function executeNoRedraw () {
     for (var chunkX = this.affecting[0][0]; chunkX < this.affecting[1][0]; chunkX++) {
         for (var chunkY = this.affecting[0][1]; chunkY < this.affecting[1][1]; chunkY++) {
             this.executeChunk(chunkX, chunkY);
         }
     }
     this.contextQueue = [];
-    this.redraw();
 };
 
 TiledCanvas.prototype.executeChunk = function executeChunk (chunkX, chunkY) {
@@ -93,7 +97,10 @@ TiledCanvas.prototype.executeChunk = function executeChunk (chunkX, chunkY) {
         }
     }
 
-    this.chunks[chunkX][chunkY] = ctx.getImageData(0, 0, this.settings.chunkSize, this.settings.chunkSize);
+    var imagedata = ctx.getImageData(0, 0, this.settings.chunkSize, this.settings.chunkSize);
+    if (!this.isChunkEmpty(imagedata)) {
+        this.chunks[chunkX][chunkY] = imagedata;
+    }
 };
 
 TiledCanvas.prototype.cleanup = function cleanup (chunkX, chunkY, arguments) {
@@ -112,11 +119,12 @@ TiledCanvas.prototype.isChunkEmpty = function isChunkEmpty (imageData) {
     return true;
 };
 
-TiledCanvas.prototype.drawingRegion = function (startX, startY, endX, endY) {
-    this.affecting[0][0] = Math.floor(Math.min(startX, endX) / this.settings.chunkSize);
-    this.affecting[0][1] = Math.floor(Math.min(startY, endY) / this.settings.chunkSize);
-    this.affecting[1][0] = Math.ceil(Math.max(endX, startX) / this.settings.chunkSize);
-    this.affecting[1][1] = Math.ceil(Math.max(endY, startY / this.settings.chunkSize));
+TiledCanvas.prototype.drawingRegion = function (startX, startY, endX, endY, border) {
+    border = border || 0;
+    this.affecting[0][0] = Math.floor((Math.min(startX, endX) - border) / this.settings.chunkSize);
+    this.affecting[0][1] = Math.floor((Math.min(startY, endY) - border) / this.settings.chunkSize);
+    this.affecting[1][0] = Math.ceil((Math.max(endX, startX) + border) / this.settings.chunkSize);
+    this.affecting[1][1] = Math.ceil((Math.max(endY, startY) + border) / this.settings.chunkSize);
 };
 
 TiledCanvas.prototype.newCtx = function newCtx (width, height) {

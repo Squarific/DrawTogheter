@@ -28,9 +28,10 @@ function DrawTogheter (container, server) {
 	this.setCanvasPosition(this.canvas);
 	this.setCanvasPosition(this.effects);
 
-	this.ctx = this.canvas.getContext("2d");
-	this.bCtx = this.background.getContext("2d");
-	this.eCtx = this.effects.getContext("2d");
+	this.tiledCanvas = new TiledCanvas(this.canvas);
+	this.bTiledCanvas = new TiledCanvas(this.background);
+
+	this.eCtx = this.effects.getContext('2d');
 
 	this.drawings = [];
 	this.localDrawings = [];
@@ -162,10 +163,10 @@ DrawTogheter.prototype.addDrawing = function addDrawing (drawing) {
 		var index = this.localDrawings.indexOf(drawing);
 		if (index !== -1) {
 			this.localDrawings.splice(index, 1);
-			this.drawDrawings(this.ctx, this.localDrawings);
+			this.drawDrawings(this.tiledCanvas, this.localDrawings);
 		}
 	}.bind(this));
-	this.drawDrawings(this.ctx, this.localDrawings);
+	this.drawDrawings(this.tiledCanvas, this.localDrawings);
 };
 
 DrawTogheter.prototype.addNewLine = function addNewLine (point1, point2, size, color) {
@@ -195,22 +196,75 @@ DrawTogheter.prototype.drawDrawing = function drawDrawing (ctx, drawing) {
 	}
 };
 
-DrawTogheter.prototype.drawDrawings = function drawDrawings (ctx, drawings) {
-	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+DrawTogheter.prototype.drawDrawings = function drawDrawings (tiledCanvas, drawings) {
+	var drawingRegion;
 	for (var d = 0; d < drawings.length; d++) {
-		this.drawDrawing(ctx, drawings[d]);
+		this.drawDrawing(tiledCanvas.context, drawings[d]);
+		var tempRegion = this.sortDrawingRegion(this.getDrawingRegion(drawings[d]));
+		drawingRegion = this.minimumDrawingRegion(drawingRegion || tempRegion, tempRegion);
 	}
+	if (drawingRegion.length) {
+		tiledCanvas.drawingRegion(drawingRegion[0], drawingRegion[1], drawingRegion[2], drawingRegion[3], drawingRegion[4]);
+		tiledCanvas.execute();
+	}
+};
+
+DrawTogheter.prototype.minimumDrawingRegion = function minimumDrawingRegion (drawingRegion, tempRegion) {
+	if (drawingRegion[0] > tempRegion[0]) {
+		drawingRegion[0] = tempRegion[0];
+	}
+	if (drawingRegion[1] > tempRegion[1]) {
+		drawingRegion[1] = tempRegion[1];
+	}
+	if (drawingRegion[2] < tempRegion[2]) {
+		drawingRegion[2] = tempRegion[2];
+	}
+	if (drawingRegion[3] < tempRegion[3]) {
+		drawingRegion[3] = tempRegion[3];
+	}
+	if (drawingRegion[4] < tempRegion[4]) {
+		drawingRegion[4] = tempRegion[4];
+	}
+	return drawingRegion;
+};
+
+DrawTogheter.prototype.sortDrawingRegion = function sortDrawingRegion (drawingRegion) {
+	if (drawingRegion[0] > drawingRegion[2]) {
+		var temp = drawingRegion[0];
+		drawingRegion[0] = drawingRegion[2];
+		drawingRegion[2] = temp;
+	}
+	if (drawingRegion[1] > drawingRegion[3]) {
+		var temp = drawingRegion[1];
+		drawingRegion[1] = drawingRegion[3];
+		drawingRegion[3] = temp;
+	}
+	return drawingRegion;
 };
 
 DrawTogheter.prototype.drawing = function drawing (drawing) {
 	this.drawings.push(drawing);
-	this.drawDrawing(this.bCtx, drawing);
+	this.drawDrawing(this.bTiledCanvas.context, drawing);
+	var drawingRegion = this.getDrawingRegion(drawing);
+	this.bTiledCanvas.drawingRegion(drawingRegion[0], drawingRegion[1], drawingRegion[2], drawingRegion[3], drawingRegion[4]);
+};
+
+DrawTogheter.prototype.getDrawingRegion = function getDrawingRegion (drawing) {
+	switch (drawing[0]) {
+		case 0:
+			return [drawing[1][0], drawing[1][1], drawing[2][0], drawing[2][1], drawing[3]];
+		break;
+		case 1:
+			return [drawing[1], drawing[2], drawing[1], drawing[2], drawing[3]];
+		break;
+	}
+	return [0, 0, 0, 0, 0];
 };
 
 DrawTogheter.prototype.alldrawings = function drawings (drawings) {
 	this.drawings = drawings;
 	this.localDrawings = [];
-	this.drawDrawings(this.bCtx, this.drawings);
+	this.drawDrawings(this.bTiledCanvas, this.drawings);
 };
 
 DrawTogheter.prototype.drawLine = function (ctx, sx, sy, ex, ey, size, color) {
@@ -331,6 +385,6 @@ DrawTogheter.prototype.resizeHandler = function () {
 	this.canvas.height = this.canvascontainer.offsetHeight;
 	this.effects.width = this.canvascontainer.offsetWidth;
 	this.effects.height = this.canvascontainer.offsetHeight;
-	this.drawDrawings(this.ctx, this.localDrawings);
-	this.drawDrawings(this.bCtx, this.drawings);
+	this.tiledCanvas.redraw();
+	this.bTiledCanvas.redraw();
 };
