@@ -203,7 +203,7 @@ DrawTogheter.prototype.drawDrawings = function drawDrawings (tiledCanvas, drawin
 		var tempRegion = this.sortDrawingRegion(this.getDrawingRegion(drawings[d]));
 		drawingRegion = this.minimumDrawingRegion(drawingRegion || tempRegion, tempRegion);
 	}
-	if (drawingRegion.length) {
+	if (drawingRegion) {
 		tiledCanvas.drawingRegion(drawingRegion[0], drawingRegion[1], drawingRegion[2], drawingRegion[3], drawingRegion[4]);
 		tiledCanvas.execute();
 	}
@@ -246,7 +246,8 @@ DrawTogheter.prototype.drawing = function drawing (drawing) {
 	this.drawings.push(drawing);
 	this.drawDrawing(this.bTiledCanvas.context, drawing);
 	var drawingRegion = this.getDrawingRegion(drawing);
-	this.bTiledCanvas.drawingRegion(drawingRegion[0], drawingRegion[1], drawingRegion[2], drawingRegion[3], drawingRegion[4]);
+	this.bTiledCanvas.drawingRegion(drawingRegion[0], drawingRegion[1], drawingRegion[2], drawingRegion[3], parseInt(drawingRegion[4]));
+	this.bTiledCanvas.execute();
 };
 
 DrawTogheter.prototype.getDrawingRegion = function getDrawingRegion (drawing) {
@@ -265,6 +266,7 @@ DrawTogheter.prototype.alldrawings = function drawings (drawings) {
 	this.drawings = drawings;
 	this.localDrawings = [];
 	this.drawDrawings(this.bTiledCanvas, this.drawings);
+	this.bTiledCanvas.execute();
 };
 
 DrawTogheter.prototype.drawLine = function (ctx, sx, sy, ex, ey, size, color) {
