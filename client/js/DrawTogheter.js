@@ -38,6 +38,8 @@ function DrawTogheter (container, server) {
 	this.eCtx = this.effects.getContext('2d');
 
 	this.localDrawings = [];
+	this.offsetX = 0;
+	this.offsetY = 0;
 
 	window.addEventListener("resize", this.resizeHandler.bind(this));
 
@@ -296,7 +298,44 @@ DrawTogheter.prototype.sqDistance = function (p1, p2) {
 DrawTogheter.prototype.tools = {};
 
 DrawTogheter.prototype.tools.grab = function (event) {
+	if (typeof event !== 'object') {
+		if (event === 'remove') {
+			delete this.lastPoint;
+			delete this.moving;
+			this.effects.style.cursor = '';
+		}
+		return;
+	}
 
+	var clientX = (typeof event.clientX === 'number') ? event.clientX : event.changedTouches[0].clientX,
+		clientY = (typeof event.clientY === 'number') ? event.clientY : event.changedTouches[0].clientY,
+		target = event.target || document.elementFromPoint(clientX, clientY),
+		boundingBox = target.getBoundingClientRect(),
+		relativeX = clientX - boundingBox.left,
+		relativeY = clientY - boundingBox.top;
+
+	if (event.type === 'mousedown' || event.type === 'touchstart') {
+		this.moving = true;
+		this.lastPoint = [relativeX, relativeY];
+		this.effects.style.cursor = 'move';
+	}
+	if (event.type === 'mouseup' || event.type === 'touchend' || event.type === 'mouseleave') {
+		delete this.moving;
+		delete this.lastPoint;
+		this.effects.style.cursor = '';
+	}
+
+	if (event.type === 'mousemove' || event.type === 'touchmove') {
+		if (this.moving || event.type === 'touchmove') {
+			this.lastPoint = this.lastPoint || [relativeX, relativeY];
+			this.offsetX += this.lastPoint[0] - relativeX;
+			this.offsetY += this.lastPoint[1] - relativeY;
+			this.bTiledCanvas.goto(this.offsetX, this.offsetY);
+			this.tiledCanvas.goto(this.offsetX, this.offsetY);
+			this.lastPoint = [relativeX, relativeY];
+			event.preventDefault();
+		}
+	}
 };
 
 DrawTogheter.prototype.tools.line = function (event) {
@@ -317,17 +356,17 @@ DrawTogheter.prototype.tools.line = function (event) {
 
 	if (event.type === 'click' || event.type === 'touchend') {
 		if (this.linePoint) {
-			this.addNewLine(this.linePoint, [relativeX, relativeY]);
+			this.addNewLine(this.linePoint, [relativeX + this.offsetX, relativeY + this.offsetY]);
 			this.eCtx.clearRect(0, 0, this.effects.width, this.effects.height);
 			delete this.linePoint;
 		} else {
-			this.linePoint = [relativeX, relativeY];
+			this.linePoint = [relativeX + this.offsetX, relativeY + this.offsetY];
 		}
 	}
 
 	if ((event.type === 'mousemove' || event.type === 'touchmove') && this.linePoint) {
 		this.eCtx.clearRect(0, 0, this.effects.width, this.effects.height);
-		this.drawLine(this.eCtx, this.linePoint[0], this.linePoint[1], relativeX, relativeY, this.toolSize, this.toolColor);
+		this.drawLine(this.eCtx, this.linePoint[0] - this.offsetX, this.linePoint[1] - this.offsetY, relativeX, relativeY, this.toolSize, this.toolColor);
 		event.preventDefault();
 	}
 };
@@ -351,8 +390,8 @@ DrawTogheter.prototype.tools.brush = function (event) {
 
 	if (event.type === 'mousedown' || event.type === 'touchstart') {
 		this.brushing = true;
-		this.lastPoint = [relativeX, relativeY];
-		this.addNewDot(relativeX, relativeY);
+		this.lastPoint = [relativeX + this.offsetX, relativeY + this.offsetY];
+		this.addNewDot(relativeX + this.offsetX, relativeY + this.offsetY);
 	}
 	if (event.type === 'mouseup' || event.type === 'touchend' || event.type === 'mouseleave') {
 		delete this.brushing;
@@ -361,13 +400,13 @@ DrawTogheter.prototype.tools.brush = function (event) {
 
 	if (event.type === 'mousemove' || event.type === 'touchmove') {
 		if (this.brushing || event.type === 'touchmove') {
-			this.lastPoint = this.lastPoint || [relativeX, relativeY];
+			this.lastPoint = this.lastPoint || [relativeX + this.offsetX, relativeY + this.offsetY];
 			// If the distance is bigger than half the toolSize we draw a line
-			if (this.sqDistance(this.lastPoint, [relativeX, relativeY]) > (this.toolSize * this.toolSize) / 4) {
-				this.addNewLine(this.lastPoint, [relativeX, relativeY], this.toolSize * 2);
+			if (this.sqDistance(this.lastPoint, [relativeX + this.offsetX, relativeY + this.offsetY]) > (this.toolSize * this.toolSize) / 4) {
+				this.addNewLine(this.lastPoint, [relativeX + this.offsetX, relativeY + this.offsetY], this.toolSize * 2);
 			}
-			this.addNewDot(relativeX, relativeY);
-			this.lastPoint = [relativeX, relativeY];
+			this.addNewDot(relativeX + this.offsetX, relativeY + this.offsetY);
+			this.lastPoint = [relativeX + this.offsetX, relativeY + this.offsetY];
 			event.preventDefault();
 		}
 
