@@ -132,6 +132,7 @@ DrawTogheter.prototype.chat = function chat (msg) {
 };
 
 DrawTogheter.prototype.changeRoom = function changeRoom (room) {
+	this.chat("Changing rooms, the app may hang for about three minutes.");
 	this.socket.emit("join", room);
 };
 
@@ -269,6 +270,7 @@ DrawTogheter.prototype.getDrawingRegion = function getDrawingRegion (drawing) {
 
 DrawTogheter.prototype.alldrawings = function drawings (drawings) {
 	this.localDrawings = [];
+	this.bTiledCanvas.clearAll();
 	this.drawDrawings(this.bTiledCanvas, drawings);
 	this.bTiledCanvas.execute();
 };
