@@ -29,10 +29,10 @@ function DrawTogheter (container, server) {
 	this.setCanvasPosition(this.effects);
 
 	this.tiledCanvas = new TiledCanvas(this.canvas, {
-		chunkSize: 512
+		chunkSize: 256
 	});
 	this.bTiledCanvas = new TiledCanvas(this.background, {
-		chunkSize: 512
+		chunkSize: 256
 	});
 
 	this.eCtx = this.effects.getContext('2d');
@@ -171,7 +171,7 @@ DrawTogheter.prototype.addDrawing = function addDrawing (drawing) {
 			this.drawDrawings(this.tiledCanvas, this.localDrawings);
 		}
 	}.bind(this));
-	this.tiledCanvas.chunks = {};
+	this.tiledCanvas.clearAll();
 	this.drawDrawings(this.tiledCanvas, this.localDrawings);
 };
 

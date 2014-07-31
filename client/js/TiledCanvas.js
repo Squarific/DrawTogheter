@@ -79,23 +79,31 @@ TiledCanvas.prototype.executeNoRedraw = function executeNoRedraw () {
     this.contextQueue = [];
 };
 
+TiledCanvas.prototype.clearAll = function clearAll () {
+    for (var chunkX in this.chunks) {
+        for (var chunkY in this.chunks[chunkY]) {
+            this.chunks[chunkX][chunkY].clearRect(this.chunks[chunkX][chunkY].canvas.width, this.chunks[chunkX][chunkY].canvas.height);
+        }
+    }
+};
+
 TiledCanvas.prototype.executeChunk = function executeChunk (chunkX, chunkY) {
     this.chunks[chunkX] = this.chunks[chunkX] || [];
 
-    this.chunks[chunkX][chunkY] = this.chunks[chunkX][chunkY] || this.newCtx(this.settings.chunkSize, this.settings.chunkSize);
+    this.chunks[chunkX][chunkY] = this.chunks[chunkX][chunkY] || this.newCtx(this.settings.chunkSize, this.settings.chunkSize, -chunkX * this.settings.chunkSize, -chunkY * this.settings.chunkSize);
     var ctx = this.chunks[chunkX][chunkY];
-
-    ctx.translate(-chunkX * this.settings.chunkSize, -chunkY * this.settings.chunkSize);
 
     for (var queuekey = 0; queuekey < this.contextQueue.length; queuekey++) {
         if (typeof ctx[this.contextQueue[queuekey][0]] === 'function') {
-            ctx[this.contextQueue[queuekey][0]].apply(ctx, Array.prototype.slice.call(this.contextQueue[queuekey], 1));
+            this.executeQueueOnChunk(ctx, this.contextQueue[queuekey]);
         } else {
             ctx[this.contextQueue[queuekey][0]] = this.contextQueue[queuekey][1];
         }
     }
+};
 
-    ctx.translate(chunkX * this.settings.chunkSize, chunkY * this.settings.chunkSize);
+TiledCanvas.prototype.executeQueueOnChunk = function executeQueueOnChunk (ctx, args) {
+    ctx[args[0]].apply(ctx, Array.prototype.slice.call(args, 1));
 };
 
 TiledCanvas.prototype.cleanup = function cleanup (chunkX, chunkY, arguments) {
@@ -113,10 +121,11 @@ TiledCanvas.prototype.drawingRegion = function (startX, startY, endX, endY, bord
     this.affecting[1][1] = Math.ceil((Math.max(endY, startY) + border) / this.settings.chunkSize);
 };
 
-TiledCanvas.prototype.newCtx = function newCtx (width, height) {
+TiledCanvas.prototype.newCtx = function newCtx (width, height, translateX, translateY) {
     var ctx = document.createElement('canvas').getContext('2d');
     ctx.canvas.width = width;
     ctx.canvas.height = height;
+    ctx.translate(translateX, translateY);
     return ctx;
 };
 
