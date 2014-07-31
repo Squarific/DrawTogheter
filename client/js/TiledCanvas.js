@@ -80,9 +80,10 @@ TiledCanvas.prototype.executeNoRedraw = function executeNoRedraw () {
 };
 
 TiledCanvas.prototype.clearAll = function clearAll () {
+    this.contextQueue = [];
     for (var chunkX in this.chunks) {
         for (var chunkY in this.chunks[chunkY]) {
-            this.chunks[chunkX][chunkY].clearRect(this.chunks[chunkX][chunkY].canvas.width, this.chunks[chunkX][chunkY].canvas.height);
+            this.chunks[chunkX][chunkY].clearRect(0, 0, this.chunks[chunkX][chunkY].canvas.width, this.chunks[chunkX][chunkY].canvas.height);
         }
     }
 };
