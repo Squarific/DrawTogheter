@@ -136,7 +136,7 @@ DrawTogheter.prototype.changeRoom = function changeRoom (room) {
 };
 
 DrawTogheter.prototype.changeName = function changeName (name) {
-	this.socket.emit("changeName", name);
+	this.socket.emit("changename", name);
 };
 
 DrawTogheter.prototype.sendMessage = function sendMessage () {
