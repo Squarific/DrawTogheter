@@ -40,6 +40,7 @@ function DrawTogheter (container, server) {
 	this.localDrawings = [];
 	this.offsetX = 0;
 	this.offsetY = 0;
+	this.ink = 0;
 
 	window.addEventListener("resize", this.resizeHandler.bind(this));
 
@@ -73,6 +74,9 @@ DrawTogheter.prototype.connect = function connect (server) {
 	this.socket.on("drawings", this.alldrawings.bind(this));
 	this.socket.on("chat", this.chat.bind(this));
 	this.socket.on("safechat", this.safechat.bind(this));
+	this.socket.on("ink", function (ink) {
+		this.ink = ink;
+	}.bind(this));
 	this.socket.on("name", function (name) {
 		document.getElementById('nameinput').value = name;
 	});
