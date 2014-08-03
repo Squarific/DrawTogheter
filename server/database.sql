@@ -20,3 +20,11 @@ CREATE TABLE IF NOT EXISTS msg (
     now DATETIME,
     PRIMARY KEY (id)
 );
+
+CREATE TABLE IF NOT EXISTS users (
+    id BIGINT AUTO_INCREMENT,
+    name VARCHAR(255),
+    email VARCHAR(255),
+    password VARCHAR(255),
+    member TINYINT
+);
