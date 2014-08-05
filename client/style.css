@@ -35,10 +35,10 @@ html, body {
 	top:6%;
 	bottom:8%;
 	padding:3%;
-	background:rgba(166, 209, 155, 0.95);
+	background:rgb(236, 241, 234);
 	border:3px solid rgb(51, 78, 46);
 	overflow:auto;
-	color:rgb(51, 78, 46);
+	color:rgb(15, 94, 0);
 }
 
 .done {
