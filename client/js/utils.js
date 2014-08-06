@@ -36,3 +36,7 @@ function flashDonate () {
     }
     setTimeout(execFlash, 450);
 }
+
+function toggleLoginOverlay () {
+    
+}

@@ -21,12 +21,12 @@ html, body {
 	position:absolute;
 	font-size:200%;
 	right:5px;
-	top:5px;
+	top:15px;
 	cursor:pointer;
 	padding:8px;
 }
 
-.donateoverlay {
+.overlay {
 	display:none;
 	position:fixed;
 	font-size:22px;
@@ -36,9 +36,9 @@ html, body {
 	bottom:8%;
 	padding:3%;
 	background:rgb(236, 241, 234);
-	border:3px solid rgb(51, 78, 46);
+	border:10px solid rgb(120, 134, 119);
 	overflow:auto;
-	color:rgb(15, 94, 0);
+	color:rgb(59, 65, 59);
 }
 
 .done {
@@ -117,6 +117,7 @@ html, body {
 	background:rgb(110, 138, 153);
 	border-bottom:rgb(73, 93, 102) 3px solid;
 	color:white;
+	font-family: 'Oswald', sans-serif;
 }
 
 .toolbutton {

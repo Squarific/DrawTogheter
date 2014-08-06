@@ -4,6 +4,7 @@
 		<title>Draw togheter</title>
 		<link rel="stylesheet" href="style.css?v=4">
 		<link rel="stylesheet" href="projects.css">
+		<link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
 		<meta name="viewport" content="width=device-width">
 		<meta name="description" content="Draw togheter online with strangers or friends">
 	</head>
@@ -32,6 +33,7 @@
 				<input id="nameinput" value="name" />
 				<div onclick="drawTogheter.changeName(document.getElementById('nameinput').value)" class="toolbutton">Change name</div>
 			</div>
+			<div class="toolbutton loginbutton" onclick="toggleLoginOverlay()">Login</div>
 		</div>
 		<div id="drawregion"></div>
 		<div class="projects">
@@ -94,15 +96,15 @@
 			resizeDrawRegion();
 		</script>
 		<script>
-	var drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://drawtogheter.squarific.com:8475");
+			/*var drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://drawtogheter.squarific.com:8475");
 			drawTogheter.socket.on('room', function (room) {
 				document.getElementById('roominput').value = room;
-			});
+			});*/
 			setInterval(flashDonate, 5 * 60 * 1000);
 		</script>
 		<!-- Go to www.addthis.com/dashboard to customize your tools -->
 		<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-53c4fbf2311fe8f1"></script>
-		<div id="donate" class="donateoverlay">
+		<div id="donate" class="overlay donateoverlay">
 			<div class='closebutton' onclick="closeParent(this)">Close</div>
 			<span style="font-size:200%; font-weight:bold;">I hope you are enjoying the app!</span><br/><br/>
 			<span>I definitely enjoyed making it. I want to ask your help though.</span><br/>
@@ -131,6 +133,9 @@
 				<li class="done">Share room links</li>
 				<li>History viewer</li>
 			</ul>
+		</div>
+		<div id="login" class="overlay loginoverlay">
+				
 		</div>
 	</body>
 </html>
