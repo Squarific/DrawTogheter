@@ -123,8 +123,8 @@ html, body {
 .toolbutton {
 	display:inline-block;
 	padding:15px;
-	padding-left:25px;
-	padding-right:25px;
+	padding-left:1%;
+	padding-right:1%;
 	cursor:pointer;
 }
 
@@ -167,4 +167,10 @@ html, body {
 
 .active {
 	background:rgb(126, 151, 163);
+}
+
+@media (max-width: 550px) {
+	.toolbutton {
+		display:block;
+	}
 }
