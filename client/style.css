@@ -9,6 +9,11 @@ html, body {
 	background:rgb(238, 238, 238);
 }
 
+input {
+	padding:3px;
+	font-size:16px;
+}
+
 .flashdelay {
 	transition-duration:200ms;
 }
@@ -19,6 +24,7 @@ html, body {
 
 .closebutton {
 	position:absolute;
+	font-family: 'Oswald', sans-serif;
 	font-size:200%;
 	right:5px;
 	top:15px;
@@ -39,6 +45,40 @@ html, body {
 	border:10px solid rgb(120, 134, 119);
 	overflow:auto;
 	color:rgb(59, 65, 59);
+}
+
+.loginoverlay {
+	border:10px solid rgb(73, 93, 102);
+	background:rgb(200, 210, 214);
+	color:rgb(55, 56, 48);
+	right:initial;
+	bottom:initial;
+	left:10%;
+	top:10%;
+}
+
+.loginform .label {
+	display:inline-block;
+	min-width:300px;
+}
+
+.loginoverlay input {
+	display:inline-block;
+	font-size:120%;
+	min-width:300px;
+	box-sizing:border-box;
+}
+
+.loginoverlay input[type=submit] {
+	padding:5px;
+	width:100%;
+	margin:0;
+	margin-top:30px;
+}
+
+.loginform {
+	display:inline-block;
+	padding:25px;
 }
 
 .done {
@@ -123,8 +163,8 @@ html, body {
 .toolbutton {
 	display:inline-block;
 	padding:15px;
-	padding-left:1%;
-	padding-right:1%;
+	padding-left:.8%;
+	padding-right:.8%;
 	cursor:pointer;
 }
 
@@ -151,7 +191,7 @@ html, body {
 
 .sizeinputcontainer, .roominputcontaner {
 	display:inline-block;
-	margin-left:50px;
+	margin-left:30px;
 	margin-right:10px;
 }
 

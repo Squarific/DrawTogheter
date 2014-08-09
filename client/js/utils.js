@@ -12,8 +12,12 @@ function closeParent (target) {
     }
 }
 
-function donate () {
-    document.getElementById('donate').style.display = 'block';
+function toggleById (id) {
+    if (document.getElementById(id).style.display === "block") {
+        document.getElementById(id).style.display = "";
+    } else {
+        document.getElementById(id).style.display = "block";
+    }
 }
 
 function flashDonate () {
@@ -35,8 +39,4 @@ function flashDonate () {
         }
     }
     setTimeout(execFlash, 450);
-}
-
-function toggleLoginOverlay () {
-    
 }
