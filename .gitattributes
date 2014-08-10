@@ -1,0 +1,14 @@
+* text=auto
+
+# TEXT files
+LICENSE text
+README text
+*.js text
+*.html text
+*.css text
+*.md text
+*.sql text
+
+# BINARY Files
+.png binary
+
