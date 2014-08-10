@@ -4,11 +4,11 @@ var mysql = require("mysql");
 var database = mysql.createConnection({
 	host: "localhost",
 	user: "drawtogheter",
-	password: 'secret',
+	password: 'uf892fj389f23f9j',
 	database: "drawtogheter"
 });
 var Cache = require('./cache.js');
-var cache = new Cache(20000);
+var cache = new Cache(15000);
 
 function sqDistance (p1, p2) {
 	return (p1[0] - p2[0]) * (p1[0] - p2[0]) + (p1[1] - p2[1]) * (p1[1] - p2[1]);
@@ -17,7 +17,7 @@ function sqDistance (p1, p2) {
 var callbacksOnRoomDone = {};
 
 io.on('connection', function (socket) {
-    socket.dName = utils.randomString(8);
+    socket.dName = "guest_" + utils.randomString(6);
     console.log("New connectedion: " + socket.dName);
 	socket.emit('name', socket.dName);
 	socket.emit('safechat', 'Drew something cool? Share it: <a href="http://www.reddit.com/r/Drawtogheter">http://www.reddit.com/r/Drawtogheter</a>');
@@ -84,7 +84,7 @@ io.on('connection', function (socket) {
 				utils.socketJoinRoom(io, socket, room, cache.get(room));
 			}];
 
-			database.query('SELECT * FROM (SELECT * FROM drawings WHERE room = ? ORDER BY now DESC LIMIT 20000) AS T ORDER BY now ASC', [room], function (err, rows, fields) {
+			database.query('SELECT * FROM (SELECT * FROM drawings WHERE room = ? ORDER BY now DESC LIMIT 15000) AS T ORDER BY now ASC', [room], function (err, rows, fields) {
 				if (err) {
 					console.log('Drawings select error on join', err);
 					return;

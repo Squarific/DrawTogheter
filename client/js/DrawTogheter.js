@@ -92,7 +92,7 @@ DrawTogheter.prototype.connect = function connect (server) {
 		this.room = room;
 		this.chat('You can share this room: ' + location.href);
 	}.bind(this));
-	this.socket.emit("join", location.hash.substring(1) || "main");
+	this.changeRoom(location.hash.substring(1) || "main");
 };
 
 DrawTogheter.prototype.safechat = function safechat (msg) {
@@ -138,6 +138,12 @@ DrawTogheter.prototype.chat = function chat (msg) {
 DrawTogheter.prototype.changeRoom = function changeRoom (room) {
 	this.chat("Changing rooms, the app may hang for about three minutes.");
 	this.socket.emit("join", room);
+	this.bTiledCanvas.clearAll();
+	this.drawText(this.bTiledCanvas.context, 'Loading room...', [25, 75], '48px  sans-serif', "black");
+	this.bTiledCanvas.drawingRegion(0, 0, 500, 250);
+	this.bTiledCanvas.execute();
+	this.bTiledCanvas.goto(0, 0);
+	this.tiledCanvas.goto(0, 0);
 };
 
 DrawTogheter.prototype.changeName = function changeName (name) {
@@ -176,8 +182,18 @@ DrawTogheter.prototype.addDrawing = function addDrawing (drawing) {
 			this.drawDrawings(this.tiledCanvas, this.localDrawings);
 		}
 	}.bind(this));
-	this.tiledCanvas.clearAll();
+	this.clearLocalDrawings();
 	this.drawDrawings(this.tiledCanvas, this.localDrawings);
+};
+
+DrawTogheter.prototype.clearLocalDrawings = function clearLocalDrawings () {
+	if (this.clearLocalDrawingsTimeout) {
+		clearTimeout(this.clearLocalDrawingsTimeout);
+	}
+	this.clearLocalDrawingsTimeout = setTimeout(function () {
+		this.tiledCanvas.clearAll();
+		delete this.clearLocalDrawingsTimeout;
+	}.bind(this), 300);
 };
 
 DrawTogheter.prototype.addNewLine = function addNewLine (point1, point2, size, color) {
@@ -195,7 +211,6 @@ DrawTogheter.prototype.addNewDot = function addNewDot (x, y, size, color) {
 	var drawing = [1, x, y, size, color];
 	this.addDrawing(drawing);
 };
-
 DrawTogheter.prototype.drawDrawing = function drawDrawing (ctx, drawing) {
 	switch (drawing[0]) {
 		case 0:
@@ -277,6 +292,8 @@ DrawTogheter.prototype.alldrawings = function drawings (drawings) {
 	this.bTiledCanvas.clearAll();
 	this.drawDrawings(this.bTiledCanvas, drawings);
 	this.bTiledCanvas.execute();
+	this.bTiledCanvas.goto(0, 0);
+	this.tiledCanvas.goto(0, 0);
 };
 
 DrawTogheter.prototype.drawLine = function (ctx, sx, sy, ex, ey, size, color) {
@@ -296,6 +313,13 @@ DrawTogheter.prototype.drawDot = function (ctx, x, y, size, color) {
 	ctx.fillStyle = color;
 	ctx.fill();
 };
+
+DrawTogheter.prototype.drawText = function drawText (ctx, text, point, font, color) {
+	ctx.font = font;
+	ctx.fillStyle = color;
+	ctx.fillText(text, point[0], point[1]);
+};
+
 
 DrawTogheter.prototype.sqDistance = function (p1, p2) {
 	return (p1[0] - p2[0]) * (p1[0] - p2[0]) + (p1[1] - p2[1]) * (p1[1] - p2[1]);

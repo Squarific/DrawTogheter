@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<title>Draw togheter</title>
-		<link rel="stylesheet" href="style.css?v=4">
+		<link rel="stylesheet" href="style.css?v=5">
 		<link rel="stylesheet" href="projects.css">
 		<link href='http://fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
 		<meta name="viewport" content="width=device-width">
@@ -22,7 +22,7 @@
 				Brush Size:
 				<input value="5" type="number" class="sizeinput" max="50" onchange="drawTogheter.setToolSize(parseInt(this.value))" onkeyup="drawTogheter.setToolSize(parseInt(this.value))"/>
 			</div>
-			<input class="colorbutton" type="color" value="#F0BC11" onchange="drawTogheter.setToolColor(this.value);"/>
+			<input class="colorbutton" type="color" value="#F0BC11" onchange="drawTogheter.setToolColor(this.value);" onkeyup="drawTogheter.setToolColor(this.value);"/>
 			<div class="roominputcontaner">
 				Go to a different room:
 				<input id="roominput" value="main" />
@@ -82,9 +82,9 @@
 			</a>
 		</div>
 		<script src="js/polyfill.js"></script>
-		<script src="js/TiledCanvas.js?v=6"></script>
+		<script src="js/TiledCanvas.js?v=7"></script>
 		<script src="http://drawtogheter.squarific.com:8475/socket.io/socket.io.js"></script>
-		<script src="js/DrawTogheter.js?v=9"></script>
+		<script src="js/DrawTogheter.js?v=10"></script>
 		<script src="js/utils.js?v=1"></script>
 		<script>
 			function resizeDrawRegion () {
@@ -96,10 +96,10 @@
 			resizeDrawRegion();
 		</script>
 		<script>
-			/*var drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://drawtogheter.squarific.com:8475");
+			var drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://drawtogheter.squarific.com:8475");
 			drawTogheter.socket.on('room', function (room) {
 				document.getElementById('roominput').value = room;
-			});*/
+			});
 			setInterval(flashDonate, 5 * 60 * 1000);
 		</script>
 		<!-- Go to www.addthis.com/dashboard to customize your tools -->

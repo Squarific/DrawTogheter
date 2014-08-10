@@ -82,9 +82,13 @@ TiledCanvas.prototype.executeNoRedraw = function executeNoRedraw () {
 TiledCanvas.prototype.clearAll = function clearAll () {
     this.contextQueue = [];
     for (var chunkX in this.chunks) {
-        for (var chunkY in this.chunks[chunkX]) {
-            this.clearChunk(chunkX, chunkY);
-        }
+        this.clearChunkRow(chunkX);
+    }
+};
+
+TiledCanvas.prototype.clearChunkRow = function clearChunkRow (chunkX) {
+    for (var chunkY in this.chunks[chunkX]) {
+        this.clearChunk(chunkX, chunkY);
     }
 };
 
