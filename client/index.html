@@ -36,6 +36,25 @@
 			<div class="toolbutton loginbutton" onclick="toggleById('login')">Login</div>
 		</div>
 		<div id="drawregion"></div>
+		<div id="modeselection" class="modeselection">
+			<span class="welcometext">With who do you want to draw?</span>
+			<div class="modebutton" onclick="start('main')">
+				<img src="images/modes/multi.png"><br/>
+				Multiple random people (max. 14)
+			</div>
+			<div class="modebutton" onclick="start('private')">
+				<img src="images/modes/private.png"><br/>
+				Private random chat (1 on 1)
+			</div>
+			<div class="modebutton" onclick="start('invite')">
+				<img src="images/modes/invite.png"><br/>
+				Invite friends
+			</div>
+			<div class="modebutton disabled" onclick="/*start('game')*/">
+				<img src="images/modes/game.png"><br/>
+				Play guess the drawing (soon&trade;)
+			</div>
+		</div>
 		<div class="projects">
 			<div class="subtitle">Check out some other projects:</div>
 			<a href="/neuralcar/" class="project" title="NeuralCar">
@@ -85,23 +104,7 @@
 		<script src="js/TiledCanvas.js?v=7"></script>
 		<script src="http://drawtogheter.squarific.com:8475/socket.io/socket.io.js"></script>
 		<script src="js/DrawTogheter.js?v=10"></script>
-		<script src="js/utils.js?v=1"></script>
-		<script>
-			function resizeDrawRegion () {
-				var tools = document.getElementById("tools");
-				var drawRegion = document.getElementById("drawregion");
-				drawRegion.style.minHeight = Math.max(400, window.innerHeight - tools.offsetHeight - 150) + 'px';
-			}
-			window.addEventListener('resize', resizeDrawRegion);
-			resizeDrawRegion();
-		</script>
-		<script>
-			var drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://drawtogheter.squarific.com:8475");
-			drawTogheter.socket.on('room', function (room) {
-				document.getElementById('roominput').value = room;
-			});
-			setInterval(flashDonate, 5 * 60 * 1000);
-		</script>
+		<script src="js/utils.js?v=2"></script>
 		<!-- Go to www.addthis.com/dashboard to customize your tools -->
 		<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-53c4fbf2311fe8f1"></script>
 		<div id="donate" class="overlay donateoverlay">
@@ -131,7 +134,9 @@
 				<li>Limited amount of ink</li>
 				<li>Fullscreen and better layout</li>
 				<li class="done">Share room links</li>
+				<li>Private one on one mode</li>
 				<li>History viewer</li>
+				<li>Guess the drawing game</li>
 			</ul>
 		</div>
 		<div id="login" class="overlay loginoverlay">

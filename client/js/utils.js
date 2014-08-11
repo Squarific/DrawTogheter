@@ -40,3 +40,23 @@ function flashDonate () {
     }
     setTimeout(execFlash, 450);
 }
+
+function start (mode) {
+    var drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://drawtogheter.squarific.com:8475", mode);
+    drawTogheter.socket.on('room', function (room) {
+        document.getElementById('roominput').value = room;
+    });
+    document.getElementById("modeselection").style.display = "none";
+    document.getElementById("tools").style.display = "block";
+    document.getElementById("drawregion").style.display = "block";
+}
+
+function resizeDrawRegion () {
+    var tools = document.getElementById("tools");
+    var drawRegion = document.getElementById("drawregion");
+    drawRegion.style.minHeight = Math.max(400, window.innerHeight - tools.offsetHeight - 150) + 'px';
+}
+
+setInterval(flashDonate, 5 * 60 * 1000);
+window.addEventListener('resize', resizeDrawRegion);
+resizeDrawRegion();

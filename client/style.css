@@ -5,6 +5,7 @@ html, body {
 
 #drawregion {
 	position:relative;
+	display:none;
 	min-height:400px;
 	background:rgb(238, 238, 238);
 }
@@ -14,12 +15,50 @@ input {
 	font-size:16px;
 }
 
+.welcometext {
+	display:block;
+	padding-bottom:5%;
+	font-size:48px;
+	color:white;
+}
+
 .flashdelay {
 	transition-duration:200ms;
 }
 
 .flash {
 	background:orange;
+}
+
+.modeselection {
+	text-align:center;
+	transition-duration:200ms;
+	padding:5%;
+	padding-bottom:10%;
+	background:rgb(127, 135, 138);
+}
+
+.modebutton {
+	display:inline-block;
+	cursor:pointer;
+	background:rgb(64, 81, 92);
+	color:white;
+	font-size:26px;
+	padding:2%;
+	margin:20px;
+}
+
+.modebutton:hover {
+	background:rgb(47, 60, 68);
+}
+
+.disabled {
+	cursor:default;
+	background:rgb(73, 73, 73);
+}
+
+.disabled:hover {
+	background:rgb(73, 73, 73);
 }
 
 .closebutton {
@@ -153,6 +192,7 @@ input {
 }
 
 .tools {
+	display:none;
 	text-align:center;
 	background:rgb(110, 138, 153);
 	border-bottom:rgb(73, 93, 102) 3px solid;
@@ -211,6 +251,15 @@ input {
 
 @media (max-width: 550px) {
 	.toolbutton {
+		display:block;
+	}
+
+	.modeselection {
+		padding:0;
+	}
+
+	.modebutton {
+		margin:0;
 		display:block;
 	}
 }

@@ -211,6 +211,7 @@ DrawTogheter.prototype.addNewDot = function addNewDot (x, y, size, color) {
 	var drawing = [1, x, y, size, color];
 	this.addDrawing(drawing);
 };
+
 DrawTogheter.prototype.drawDrawing = function drawDrawing (ctx, drawing) {
 	switch (drawing[0]) {
 		case 0:
