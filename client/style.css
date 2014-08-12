@@ -40,11 +40,12 @@ input {
 
 .modebutton {
 	display:inline-block;
+	transition-duration:150ms;
 	cursor:pointer;
 	background:rgb(64, 81, 92);
 	color:white;
-	font-size:26px;
-	padding:2%;
+	font-size:18px;
+	padding:1.5%;
 	margin:20px;
 }
 
