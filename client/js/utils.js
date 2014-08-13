@@ -1,3 +1,5 @@
+var drawTogheter;
+
 function activate (target) {
     var buttons = document.getElementsByClassName("toolbutton");
     for (var k = 0; k < buttons.length; k++) {
@@ -41,8 +43,8 @@ function flashDonate () {
     setTimeout(execFlash, 450);
 }
 
-function start (mode) {
-    var drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://drawtogheter.squarific.com:8475", mode);
+function start (mode, room) {
+    drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://drawtogheter.squarific.com:8475", mode, room);
     drawTogheter.socket.on('room', function (room) {
         document.getElementById('roominput').value = room;
     });
@@ -60,3 +62,7 @@ function resizeDrawRegion () {
 setInterval(flashDonate, 5 * 60 * 1000);
 window.addEventListener('resize', resizeDrawRegion);
 resizeDrawRegion();
+
+if (location.hash.substring(1)) {
+    start('multi', location.hash.substring(1));
+}

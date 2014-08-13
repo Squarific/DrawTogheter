@@ -207,6 +207,8 @@ input {
 	padding-left:.8%;
 	padding-right:.8%;
 	cursor:pointer;
+	color:white;
+	text-decoration:none;
 }
 
 .toolbutton:hover {

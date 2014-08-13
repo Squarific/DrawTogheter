@@ -1,4 +1,4 @@
-function DrawTogheter (container, server) {
+function DrawTogheter (container, server, mode, room) {
 	this.container = container;
 	this.container.style.position = "relative";
 	this.chatcontainer = this.container.appendChild(document.createElement('div'));
@@ -58,9 +58,31 @@ function DrawTogheter (container, server) {
 	this.setToolColor("#F0BC11");
 
 	this.resizeHandler();
-
 	this.connect(server);
+
+	if (mode === "invite" && !room) {
+		room = this.randomString(7);
+	}
+
+	if (mode === "private") {
+		this.privateChat();
+	} else {
+		this.changeRoom(room || "main");
+	}
 }
+
+DrawTogheter.prototype.randomString = function randomString (length) {
+	var chars = "abcdefghijklmnopqrstuvwxyz",
+		string = "";
+	for (var k = 0; k < length; k++) {
+		string += chars.charAt(Math.floor(chars.length * Math.random()));
+	}
+	return string;
+};
+
+DrawTogheter.prototype.privateChat = function privateChat () {
+
+};
 
 DrawTogheter.prototype.setCanvasPosition = function setCanvasPosition (canvas) {
 	canvas.style.position = "absolute";
@@ -88,11 +110,10 @@ DrawTogheter.prototype.connect = function connect (server) {
 		this.socket.emit("join", this.room || 'main');
 	}.bind(this));
 	this.socket.on('room', function (room) {
-		location.hash = room;
 		this.room = room;
-		this.chat('You can share this room: ' + location.href);
+        location.hash = room;
+		this.safechat('Share this link to join the room: <a href="' + location.href + '">' + location.href + '</a>');
 	}.bind(this));
-	this.changeRoom(location.hash.substring(1) || "main");
 };
 
 DrawTogheter.prototype.safechat = function safechat (msg) {
@@ -136,7 +157,6 @@ DrawTogheter.prototype.chat = function chat (msg) {
 };
 
 DrawTogheter.prototype.changeRoom = function changeRoom (room) {
-	this.chat("Changing rooms, the app may hang for about three minutes.");
 	this.socket.emit("join", room);
 	this.bTiledCanvas.clearAll();
 	this.drawText(this.bTiledCanvas.context, 'Loading room...', [25, 75], '48px  sans-serif', "black");
