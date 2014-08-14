@@ -81,7 +81,7 @@ DrawTogheter.prototype.randomString = function randomString (length) {
 };
 
 DrawTogheter.prototype.privateChat = function privateChat () {
-
+	this.socket.emit("privatechat");
 };
 
 DrawTogheter.prototype.setCanvasPosition = function setCanvasPosition (canvas) {
@@ -112,6 +112,8 @@ DrawTogheter.prototype.connect = function connect (server) {
 	this.socket.on('room', function (room) {
 		this.room = room;
         location.hash = room;
+        this.clearChat();
+        this.safechat("Drew something cool? Why don't you share it? <a href=\"http://www.reddit.com/r/Drawtogheter\">http://www.reddit.com/r/Drawtogheter</a>");
 		this.safechat('Share this link to join the room: <a href="' + location.href + '">' + location.href + '</a>');
 	}.bind(this));
 };
@@ -154,6 +156,12 @@ DrawTogheter.prototype.chat = function chat (msg) {
 	}
 
 	if (scroll) this.messages.scrollTop = this.messages.scrollHeight;
+};
+
+DrawTogheter.prototype.clearChat = function clearChat () {
+	while (this.messages.firstChild) {
+		this.messages.removeChild(this.messages.firstChild);
+	}
 };
 
 DrawTogheter.prototype.changeRoom = function changeRoom (room) {
@@ -212,6 +220,7 @@ DrawTogheter.prototype.clearLocalDrawings = function clearLocalDrawings () {
 	}
 	this.clearLocalDrawingsTimeout = setTimeout(function () {
 		this.tiledCanvas.clearAll();
+		this.tiledCanvas.redraw();
 		delete this.clearLocalDrawingsTimeout;
 	}.bind(this), 300);
 };

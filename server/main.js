@@ -4,7 +4,7 @@ var mysql = require("mysql");
 var database = mysql.createConnection({
 	host: "localhost",
 	user: "drawtogheter",
-	password: 'uf892fj389f23f9j',
+	password: 'secret',
 	database: "drawtogheter"
 });
 var Cache = require('./cache.js');
@@ -12,15 +12,40 @@ var cache = new Cache(15000);
 
 function sqDistance (p1, p2) {
 	return (p1[0] - p2[0]) * (p1[0] - p2[0]) + (p1[1] - p2[1]) * (p1[1] - p2[1]);
-};
+}
 
 var callbacksOnRoomDone = {};
+var waitingPrivateChatRoom;
+var suggestions = ['a giraffe', 'a bear', 'a farm', 'a clown', 'space', 'mario being a real plumber', 'advertisment for a silly product', 'something strange saving the world', 'something secret', 'a zoo', 'mountains', 'someone programming', 'fear', 'darkness', 'happiness', 'product placement', 'what the other looks like', 'living numbers', 'something blocky', 'someone being sassy', 'yourself', 'a superhero', 'unexpected violence', 'unexpected happiness', 'unexpected kindness'];
 
 io.on('connection', function (socket) {
     socket.dName = "guest_" + utils.randomString(6);
     console.log("New connectedion: " + socket.dName);
 	socket.emit('name', socket.dName);
-	socket.emit('safechat', 'Drew something cool? Share it: <a href="http://www.reddit.com/r/Drawtogheter">http://www.reddit.com/r/Drawtogheter</a>');
+
+	socket.on('privatechat', function () {
+		if (Object.keys(io.nsps['/'].adapter.rooms[waitingPrivateChatRoom] || {}).length !== 1) {
+			waitingPrivateChatRoom = "private_" + utils.randomString(5);
+			var alone = true;
+		}
+
+		utils.putSocketInRoom(io, database, cache, callbacksOnRoomDone, socket, waitingPrivateChatRoom, false, function (socket, room) {
+			if (alone) {
+				socket.emit('chat', "We are looking for a random stranger to join you. In the meantime you can draw already.");
+			} else {
+				var suggestion = suggestions[Math.floor(suggestions.length * Math.random())];
+				io.to(room).emit('chat', "Why don't you draw " + suggestion + "?")
+
+		        database.query('INSERT INTO msg SET ?', {
+					name: "suggestions",
+					msg: "Why don't you draw " + suggestion + "?",
+					now: new Date()
+				}, function (err) {
+					if (err) console.log(err);
+				});
+			}
+		});
+	});
 
     socket.on('chat', function (msg) {
 		if (msg == "") return;
@@ -51,57 +76,18 @@ io.on('connection', function (socket) {
 	});
 
     socket.on('join', function (room) {
-		var number = 1;
-		if (Object.keys(io.nsps['/'].adapter.rooms[room] || {}).length > 9) {
-			while (Object.keys(io.nsps['/'].adapter.rooms[room + number] || {}).length > 9) {
-				number++;
-			}
-			socket.emit('chat', room + ' was full, you have been moved to ' + room + number);
-			console.log(room + ' was full, ' + socket.dName + ' has been moved to ' + room + number);
-			room += number;
-		}
+		utils.putSocketInRoom(io, database, cache, callbacksOnRoomDone, socket, room, false, function (socket, room) {
+			var suggestion = suggestions[Math.floor(suggestions.length * Math.random())];
+			io.to(room).emit('chat', "Why don't you draw " + suggestion + "?")
 
-		socket.leave(socket.drawroom);
-
-		if (socket.drawRoom) {
-			io.to(socket.drawroom).emit("chat", socket.dName + " left " + socket.drawroom + ".");
-			console.log(socket.dName + " left " + socket.drawroom + ".");
-		}
-
-		if (!cache.exists(room)) {
-			if (callbacksOnRoomDone[room]) {
-				socket.emit('chat', 'The room is being loaded. Please wait a few seconds.');
-				callbacksOnRoomDone[room].push(function (room) {
-					utils.socketJoinRoom(io, socket, room, cache.get(room));
-				});
-				return;
-			}
-
-			socket.emit('chat', 'The room is being loaded. Please wait a few seconds.');
-			console.log('Room ' + room + ' is being loaded.');
-
-			callbacksOnRoomDone[room] = [function (room) {
-				utils.socketJoinRoom(io, socket, room, cache.get(room));
-			}];
-
-			database.query('SELECT * FROM (SELECT * FROM drawings WHERE room = ? ORDER BY now DESC LIMIT 15000) AS T ORDER BY now ASC', [room], function (err, rows, fields) {
-				if (err) {
-					console.log('Drawings select error on join', err);
-					return;
-				}
-
-				cache.pushMultiTo(room, utils.convertRowsToDrawings(rows));
-				console.log('Room ' + room + ' loaded');
-
-				for (var k = 0; k < callbacksOnRoomDone[room].length; k++) {
-					callbacksOnRoomDone[room][k](room);
-				}
-
-				delete callbacksOnRoomDone[room];
+	        database.query('INSERT INTO msg SET ?', {
+				name: "suggestions",
+				msg: "Why don't you draw " + suggestion + "?",
+				now: new Date()
+			}, function (err) {
+				if (err) console.log(err);
 			});
-		} else {
-			utils.socketJoinRoom(io, socket, room, cache.get(room));
-		}
+		});
     });
 
     socket.on('drawing', function (drawing, callback) {

@@ -44,13 +44,15 @@ function flashDonate () {
 }
 
 function start (mode, room) {
-    drawTogheter = new DrawTogheter(document.getElementById("drawregion"), "http://drawtogheter.squarific.com:8475", mode, room);
-    drawTogheter.socket.on('room', function (room) {
-        document.getElementById('roominput').value = room;
-    });
     document.getElementById("modeselection").style.display = "none";
     document.getElementById("tools").style.display = "block";
     document.getElementById("drawregion").style.display = "block";
+    var server = "http://drawtogheter.squarific.com:8475";
+    var local = "http://127.0.0.1:8475";
+    drawTogheter = new DrawTogheter(document.getElementById("drawregion"), server, mode, room);
+    drawTogheter.socket.on('room', function (room) {
+        document.getElementById('roominput').value = room;
+    });
 }
 
 function resizeDrawRegion () {
