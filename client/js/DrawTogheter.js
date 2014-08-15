@@ -192,7 +192,7 @@ DrawTogheter.prototype.setTool = function setTool (tool) {
 };
 
 DrawTogheter.prototype.setToolSize = function setToolSize (size) {
-	if (size > 50) return;
+	if (size > 50) size = 50;
 	if (size < 0) return;
 	this.toolSize = size;
 };
