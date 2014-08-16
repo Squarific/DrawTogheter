@@ -3,7 +3,7 @@ function DrawTogheterServer (database, io, cache) {
 	this.io = io;
 	this.cache = cache;
 	this.callbacksOnRoomDone = {};
-	this.gamerooms = [];
+	this.gamerooms = {};
 	this.bindSocketEvents();
 }
 
@@ -55,13 +55,12 @@ DrawTogheterServer.prototype.roomUserCount = function roomuserCount (room) {
 
 DrawTogheterServer.prototype.newgameProtocol = function newgameProtocol (socket, reqroom) {
 	if (!reqroom) {
-		for (var k = 0; k < this.gamerooms.length; k++) {
-			if (this.roomUserCount("drawroom-" + this.waitingPrivateChatRoom[k]) === 0) {
-				this.waitingPrivateChatRoom.splice(k, 1);
-				continue;
+		for (var k in this.gamerooms) {
+			if (this.roomUserCount("drawroom-" + k) === 0) {
+				delete this.gamerooms[k];
 			}
-			if (this.roomUserCount("drawroom-" + this.waitingPrivateChatRoom[k]) < this.maxPeople) {
-				reqroom = this.waitingPrivateChatRoom[k];
+			if (this.roomUserCount("drawroom-" + k) < this.maxPeople) {
+				reqroom = k;
 				break;
 			}
 		}
@@ -80,11 +79,18 @@ DrawTogheterServer.prototype.newgameProtocol = function newgameProtocol (socket,
 	}.bind(this));
 };
 
-DrawTogheterServer.prototype.socketRoom = function socketRoom (socket) {
+DrawTogheterServer.prototype.socketStringRoom = function socketStringRoom (socket) {
 	if (socket.drawroom) {
-		return this.io.to("drawroom-" + socket.drawroom);
+		return "drawroom-" + socket.drawroom;
 	}
-	return this.io.to("gameroom-" + socket.gameroom)
+	if (socket.gameroom) {
+		return "gameroom-" + socket.gameroom;
+	}
+	return false;
+};
+
+DrawTogheterServer.prototype.socketRoom = function socketRoom (socket) {
+	return this.io.to(this.socketStringRoom(socket))
 };
 
 DrawTogheterServer.prototype.drawingProtocol = function drawingProtocol (socket, drawing, callback) {
@@ -138,7 +144,7 @@ DrawTogheterServer.prototype.drawingProtocol = function drawingProtocol (socket,
     normalizedDrawing.room = socket.drawroom;
     normalizedDrawing.now = new Date();
 
-	this.io.to("drawroom-" + socket.drawroom).emit('drawing', drawing);
+	this.socketRoom(socket).emit('drawing', drawing);
 	callback();
 
     this.database.query('INSERT INTO drawings SET ?', normalizedDrawing, function (err) {
@@ -147,7 +153,7 @@ DrawTogheterServer.prototype.drawingProtocol = function drawingProtocol (socket,
             return;
         }
 
-		this.cache.pushTo(socket.drawroom, drawing);
+		this.cache.pushTo(this.socketStringRoom(socket), drawing);
     }.bind(this));
 };
 
@@ -155,7 +161,7 @@ DrawTogheterServer.prototype.joinProtocol = function joinProtocol (socket, reqRo
 	var room = this.getFirstOpenRoom("drawroom-", reqRoom);
 	if (room !== reqRoom) socket.emit(reqRoom + " was full. You have been moved to " + room + ".");
 
-	this.prepareRoom("gameroom-" + room, function () {
+	this.prepareRoom("drawroom-" + room, function () {
 		this.socketJoinDrawRoom(socket, room);
 	}.bind(this));
 };
@@ -183,7 +189,7 @@ DrawTogheterServer.prototype.newPrivateChat = function newPrivateChat (socket) {
 		var alone = true;
 	}
 
-	this.prepareRoom(this.waitingPrivateChatRoom, function (room) {
+	this.prepareRoom("drawroom-" + this.waitingPrivateChatRoom, function (room) {
 		this.socketJoinDrawRoom(socket, room);
 		if (alone) {
 			socket.emit("chat", "We are looking for a random stranger. In the meantime you are free to draw.");
@@ -230,10 +236,30 @@ DrawTogheterServer.prototype.socketJoinGameRoom = function socketJoinGameRoom (s
 	socket.gameroom = room;
 
 	socket.emit('drawings', this.cache.get("gameroom-" + room));
-	socket.join("gameroom-" + socket.drawroom);
-	socket.emit('gameroom', socket.drawroom);
+	socket.join("gameroom-" + room);
+	socket.emit('gameroom', room);
 
-	console.log(socket.dName + " joined gameroom " + room);
+	if (this.roomUserCount("gameroom-" + room) < 3) {
+		socket.emit("chat", "The game will start once there are 3 people in this room.");
+	} else {
+		this.startGameRoom(room);
+	}
+
+	console.log(socket.dName + " joined gameroom " + room + ". There are now " + this.roomUserCount("gameroom-" + room) + " users");
+	this.io.to("gameroom-" + room).emit("chat", socket.dName + " joined gameroom " + room + ". There are now " + this.roomUserCount("gameroom-" + room) + " users");
+
+	if (!this.gamerooms[room]) {
+		this.gamerooms[room] = {};
+	}
+};
+
+DrawTogheterServer.prototype.startGameRoom = function startGameRoom (room) {
+	if (!this.gamerooms[room] || this.gamerooms[room].started) return;
+	this.gamerooms[room].started = true;
+
+	this.gamerooms[room].pickingWords = "";
+	console.log(this.io.nsps['/'].adapter.rooms["gameroom-" + room]);
+	console.log(this.io.to("gameroom-" + room))
 };
 
 DrawTogheterServer.prototype.convertRowsToDrawings = function convertRowsToDrawings (rows) {
