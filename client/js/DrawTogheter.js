@@ -1,6 +1,8 @@
 function DrawTogheter (container, server, mode, room) {
 	this.container = container;
 	this.container.style.position = "relative";
+
+	this.gamecontainer = this.container.appendChild(document.createElement("div"));
 	this.chatcontainer = this.container.appendChild(document.createElement('div'));
 	this.canvascontainer = this.container.appendChild(document.createElement('div'));
 
@@ -16,6 +18,8 @@ function DrawTogheter (container, server, mode, room) {
 
 	this.chatcontainer.className = 'chatcontainer';
 	this.canvascontainer.className = 'canvascontainer';
+	this.gamecontainer.className = 'gamecontainer';
+
 	this.messages.className = 'messages';
 	this.messageinputcontainer.className = 'messageinputcontainer';
 	this.messageinput.className = 'messageinput';
@@ -49,7 +53,7 @@ function DrawTogheter (container, server, mode, room) {
 	this.effects.addEventListener("mouseup", this.callTool.bind(this));
 	this.effects.addEventListener("mousemove", this.callTool.bind(this));
 	this.effects.addEventListener("mouseleave", this.callTool.bind(this));
-	this.effects.addEventListener("touchstqrt", this.callTool.bind(this));
+	this.effects.addEventListener("touchstart", this.callTool.bind(this));
 	this.effects.addEventListener("touchend", this.callTool.bind(this));
 	this.effects.addEventListener("touchmove", this.callTool.bind(this));
 
@@ -66,6 +70,8 @@ function DrawTogheter (container, server, mode, room) {
 
 	if (mode === "private") {
 		this.privateChat();
+	} else if (mode === "game") {
+		this.newGame(room);
 	} else {
 		this.changeRoom(room || "main");
 	}
@@ -78,6 +84,10 @@ DrawTogheter.prototype.randomString = function randomString (length) {
 		string += chars.charAt(Math.floor(chars.length * Math.random()));
 	}
 	return string;
+};
+
+DrawTogheter.prototype.newGame = function newGame (room) {
+	this.socket.emit("newgame", room);
 };
 
 DrawTogheter.prototype.privateChat = function privateChat () {

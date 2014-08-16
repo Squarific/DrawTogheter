@@ -50,11 +50,11 @@
 			</div>
 			<div class="modebutton" onclick="start('invite')">
 				<img src="images/modes/invite.png"><br/>
-				Invite friends
+				Invite friends or draw alone
 			</div>
-			<div class="modebutton disabled" onclick="/*start('game')*/">
+			<div class="modebutton" onclick="toggleById('gameoverlay')">
 				<img src="images/modes/game.png"><br/>
-				Play guess the drawing (soon&trade;)
+				Play guess the drawing
 			</div>
 		</div>
 		<div class="projects">
@@ -151,6 +151,17 @@
 				<input id="username" type="password" name="password" /><br/>
 				<input type="submit" value="Login" />
 			</form>
+		</div>
+		<div id="gameoverlay" class="overlay gameoverlay modeselection">
+			<div class='closebutton' onclick="closeParent(this)">Close</div>
+			<div class="modebutton" onclick="start('game', 'gameroom_' + DrawTogheter.prototype.randomString(7))">
+				<img src="images/modes/create.png"><br/>
+				Create new gameroom
+			</div>
+			<div class="modebutton" onclick="start('game')">
+				<img src="images/modes/join.png"><br/>
+				Join existing gameroom
+			</div>
 		</div>
 	</body>
 </html>

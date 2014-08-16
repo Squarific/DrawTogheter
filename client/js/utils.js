@@ -1,4 +1,16 @@
 var drawTogheter;
+var urlParams;
+(window.onpopstate = function () {
+    var match,
+        pl     = /\+/g,
+        search = /([^&=]+)=?([^&]*)/g,
+        decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+        query  = window.location.search.substring(1);
+
+    urlParams = {};
+    while (match = search.exec(query))
+       urlParams[decode(match[1])] = decode(match[2]);
+})();
 
 function activate (target) {
     var buttons = document.getElementsByClassName("toolbutton");
@@ -45,11 +57,12 @@ function flashDonate () {
 
 function start (mode, room) {
     document.getElementById("modeselection").style.display = "none";
+    (document.getElementById("gameoverlay") || {style: {}}).style.display = "none";
     document.getElementById("tools").style.display = "block";
     document.getElementById("drawregion").style.display = "block";
     var server = "http://drawtogheter.squarific.com:8475";
     var local = "http://127.0.0.1:8475";
-    drawTogheter = new DrawTogheter(document.getElementById("drawregion"), server, mode, room);
+    drawTogheter = new DrawTogheter(document.getElementById("drawregion"), local, mode, room);
     drawTogheter.socket.on('room', function (room) {
         document.getElementById('roominput').value = room;
     });
@@ -67,4 +80,6 @@ resizeDrawRegion();
 
 if (location.hash.substring(1)) {
     start('multi', location.hash.substring(1));
+} else if (urlParams.gameroom) {
+    start('game', urlParams.gameroom);
 }

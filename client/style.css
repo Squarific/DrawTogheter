@@ -87,6 +87,24 @@ input {
 	color:rgb(59, 65, 59);
 }
 
+.overlay .modebutton{
+	padding:40px;
+}
+
+.gameoverlay .closebutton {
+	position:relative;
+	top:0;
+	right:0;
+}
+
+.gameoverlay {
+	background:rgb(196, 207, 211);
+	border:10px solid rgb(87, 93, 100);
+	padding:1%;
+	bottom:initial;
+	left:initial;
+}
+
 .loginoverlay {
 	border:10px solid rgb(73, 93, 102);
 	background:rgb(200, 210, 214);
@@ -264,5 +282,15 @@ input {
 	.modebutton {
 		margin:0;
 		display:block;
+	}
+
+	.gameoverlay {
+		padding:10px;
+	}
+
+	.closebutton {
+		position:relative;
+		top:0;
+		right:0;
 	}
 }
