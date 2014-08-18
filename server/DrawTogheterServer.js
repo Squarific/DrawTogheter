@@ -256,6 +256,7 @@ DrawTogheterServer.prototype.socketJoinGameRoom = function socketJoinGameRoom (s
 DrawTogheterServer.prototype.startGameRoom = function startGameRoom (room) {
 	if (!this.gamerooms[room] || this.gamerooms[room].started) return;
 	this.gamerooms[room].started = true;
+	this.io.to("gameroom-" + room).emit("The game has been started.");
 
 	this.gamerooms[room].pickingWords = "";
 	console.log(this.io.nsps['/'].adapter.rooms["gameroom-" + room]);
