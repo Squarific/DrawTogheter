@@ -67,7 +67,7 @@ DrawTogheterServer.prototype.newgameProtocol = function newgameProtocol (socket,
 
 		if (!reqroom) {
 			socket.emit("chat", "No existing gameroom could be found. Creating a new room.");
-			reqroom = "gameroom_" + this.randonString(7);
+			reqroom = "gameroom_" + this.randomString(7);
 		}
 	}
 
