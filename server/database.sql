@@ -1,12 +1,14 @@
 CREATE TABLE IF NOT EXISTS drawings (
-    id BIGINT AUTO_INCREMENT,
-    dtype INT,
-    x1 BIGINT,
-    y1 BIGINT,
-    x2 BIGINT,
-    y2 BIGINT,
-    size INT,
-    color VARCHAR(7),
+    id BIGINT UNSIGNED AUTO_INCREMENT,
+    dtype TINYINT UNSIGNED,
+    x1 INT,
+    y1 INT,
+    x2 INT,
+    y2 INT,
+    size TINYINT UNSIGNED,
+    r TINYINT UNSIGNED,
+    g TINYINT UNSIGNED,
+    b TINYINT UNSIGNED,
     room VARCHAR(255),
     now DATETIME,
 	PRIMARY KEY (id),
@@ -22,7 +24,7 @@ CREATE TABLE IF NOT EXISTS msg (
 );
 
 CREATE TABLE IF NOT EXISTS users (
-    id BIGINT AUTO_INCREMENT,
+    id BIGINT UNSIGNED AUTO_INCREMENT,
     name VARCHAR(255),
     email VARCHAR(255),
     password VARCHAR(255),
