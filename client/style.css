@@ -293,4 +293,18 @@ input {
 		top:0;
 		right:0;
 	}
+
+	.chatcontainer {
+		max-height:300px;
+		position:initial;
+		width:initial;
+	}
+
+	.canvascontainer {
+		position:relative;
+		bottom:initial;
+		left:initial;
+		right:initial;
+		width:initial;
+	}
 }
