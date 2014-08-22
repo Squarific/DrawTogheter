@@ -200,6 +200,7 @@ input {
 	background:rgb(179, 187, 192);
 	border-left:3px solid gray;
 	box-sizing:border-box;
+	overflow:hidden;
 }
 
 .canvascontainer {
