@@ -6,13 +6,17 @@ html, body {
 #drawregion {
 	position:relative;
 	display:none;
-	min-height:400px;
+	min-height:640px;
 	background:rgb(238, 238, 238);
 }
 
 input {
 	padding:3px;
 	font-size:16px;
+}
+
+.fullcontainer {
+	position:relative;
 }
 
 .welcometext {
@@ -209,10 +213,10 @@ input {
 	left:0;
 	top:0;
 	bottom:0;
+	background:white;
 }
 
 .tools {
-	display:none;
 	text-align:center;
 	background:rgb(110, 138, 153);
 	border-bottom:rgb(73, 93, 102) 3px solid;
@@ -271,7 +275,17 @@ input {
 	background:rgb(126, 151, 163);
 }
 
+.mobilemenu {
+	display:none;
+}
+
 @media (max-width: 550px) {
+	.tools {
+		position:absolute;
+		left:0;
+		top:0;
+	}
+
 	.toolbutton {
 		display:block;
 	}
@@ -289,23 +303,47 @@ input {
 		padding:10px;
 	}
 
+	.chatcontainer {
+		position:absolute;
+		left:0;
+		top:0;
+		width:100%;
+	}
+
+	.canvascontainer {
+		width:100%;
+	}
+
 	.closebutton {
 		position:relative;
 		top:0;
 		right:0;
 	}
 
-	.chatcontainer {
-		max-height:300px;
-		position:initial;
-		width:initial;
+	.welcometext {
+		font-size:24px;
+		padding-top:5%;
 	}
 
-	.canvascontainer {
-		position:relative;
-		bottom:initial;
-		left:initial;
-		right:initial;
-		width:initial;
+	.mobilemenu {
+		display:block;
+		text-align:center;
+		background:rgb(110, 138, 153);
+		border-bottom:rgb(73, 93, 102) 3px solid;
+		color:white;
+		font-family: 'Oswald', sans-serif;
 	}
+
+	.hideonsmall {
+		display:none;
+	}
+}
+
+.mobilemenubutton {
+	display:inline-block;
+	width:30%;
+}
+
+.hidden {
+	display:none;
 }

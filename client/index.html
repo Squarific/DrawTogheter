@@ -9,35 +9,41 @@
 		<meta name="description" content="Draw togheter online with strangers or friends">
 	</head>
 	<body>
-		<div id='tools' class="tools">
-			<iframe src="http://ghbtns.com/github-btn.html?user=squarific&repo=drawtogheter&type=watch&count=true&size=large"
-  			allowtransparency="true" frameborder="0" scrolling="0" width="170" height="30" style="vertical-align:middle;"></iframe>
-			<iframe src="http://ghbtns.com/github-btn.html?user=squarific&repo=drawtogheter&type=fork&count=true&size=large"
-			allowtransparency="true" frameborder="0" scrolling="0" width="170" height="30" style="vertical-align:middle;"></iframe>
-			<a class="toolbutton" href="index.html">Home</a>
-			<div id="donatebutton" class="toolbutton flashdelay" onclick="toggleById('donate')">Donate</div>
-			<div class="toolbutton" onclick="drawTogheter.setTool('grab'); activate(this)">Grab</div>
-			<div class="toolbutton" onclick="drawTogheter.setTool('line'); activate(this)">Line</div>
-			<div class="toolbutton active" onclick="drawTogheter.setTool('brush'); activate(this)">Brush</div>
-			<div class="sizeinputcontainer">
-				Brush Size:
-				<input value="5" type="number" class="sizeinput" max="50" onchange="drawTogheter.setToolSize(parseInt(this.value))" onkeyup="drawTogheter.setToolSize(parseInt(this.value))"/>
-			</div>
-			<input class="colorbutton" type="color" value="#F0BC11" onchange="drawTogheter.setToolColor(this.value);" onkeyup="drawTogheter.setToolColor(this.value);"/>
-			<div class="roominputcontaner">
-				Drawroom:
-				<input id="roominput" value="main" />
-			</div>
-			<div onclick="drawTogheter.changeRoom(document.getElementById('roominput').value)" class="toolbutton">Change room</div>
-			<div class="roominputcontaner">
-				Name:
-				<input id="nameinput" value="name" />
-			</div>
-			<div onclick="drawTogheter.changeName(document.getElementById('nameinput').value)" class="toolbutton">Change name</div>
-			<div onclick="drawTogheter.privateChat()" class="toolbutton loginbutton">Private one on one</div>
-			<div class="toolbutton loginbutton" style="display:none;" onclick="toggleById('login')">Login</div>
+		<div id="mobilemenu" class="mobilemenu hidden">
+			<div class="toolbutton mobilemenubutton" onclick="togglezindex('tools')">Toggle Options</div>
+			<div class="toolbutton mobilemenubutton" onclick="togglezindex('chatcontainer')">Toggle chat</div>
 		</div>
-		<div id="drawregion"></div>
+		<div class="fullcontainer">
+			<div id='tools' class="tools hidden">
+				<iframe class="hideonsmall" src="http://ghbtns.com/github-btn.html?user=squarific&repo=drawtogheter&type=watch&count=true&size=large"
+	  			allowtransparency="true" frameborder="0" scrolling="0" width="170" height="30" style="vertical-align:middle;"></iframe>
+				<iframe class="hideonsmall" src="http://ghbtns.com/github-btn.html?user=squarific&repo=drawtogheter&type=fork&count=true&size=large"
+				allowtransparency="true" frameborder="0" scrolling="0" width="170" height="30" style="vertical-align:middle;"></iframe>
+				<a class="toolbutton hideonsmall" href="index.html">Home</a>
+				<div id="donatebutton" class="toolbutton flashdelay hideonsmall" onclick="toggleById('donate')">Donate</div>
+				<div class="toolbutton" onclick="drawTogheter.setTool('grab'); activate(this)">Grab</div>
+				<div class="toolbutton" onclick="drawTogheter.setTool('line'); activate(this)">Line</div>
+				<div class="toolbutton active" onclick="drawTogheter.setTool('brush'); activate(this)">Brush</div>
+				<div class="sizeinputcontainer">
+					Brush Size:
+					<input value="5" type="number" class="sizeinput" max="50" onchange="drawTogheter.setToolSize(parseInt(this.value))" onkeyup="drawTogheter.setToolSize(parseInt(this.value))"/>
+				</div>
+				<input class="colorbutton" type="color" value="#F0BC11" onchange="drawTogheter.setToolColor(this.value);" onkeyup="drawTogheter.setToolColor(this.value);"/>
+				<div class="roominputcontaner">
+					Drawroom:
+					<input id="roominput" value="main" />
+				</div>
+				<div onclick="drawTogheter.changeRoom(document.getElementById('roominput').value)" class="toolbutton">Change room</div>
+				<div class="roominputcontaner">
+					Name:
+					<input id="nameinput" value="name" />
+				</div>
+				<div onclick="drawTogheter.changeName(document.getElementById('nameinput').value)" class="toolbutton">Change name</div>
+				<div onclick="drawTogheter.privateChat()" class="toolbutton loginbutton">Private one on one</div>
+				<div class="toolbutton loginbutton" style="display:none;" onclick="toggleById('login')">Login</div>
+			</div>
+			<div id="drawregion"></div>
+		</div>
 		<div id="modeselection" class="modeselection">
 			<span class="welcometext">With whom do you want to draw?</span>
 			<div class="modebutton" onclick="start('main')">

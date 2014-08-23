@@ -16,6 +16,7 @@ function DrawTogheter (container, server, mode, room) {
 		if (event.keyCode === 13) this.sendMessage();
 	}.bind(this));
 
+	this.chatcontainer.id = "chatcontainer";
 	this.chatcontainer.className = 'chatcontainer';
 	this.canvascontainer.className = 'canvascontainer';
 	this.gamecontainer.className = 'gamecontainer';
@@ -230,6 +231,7 @@ DrawTogheter.prototype.clearLocalDrawings = function clearLocalDrawings () {
 	}
 	this.clearLocalDrawingsTimeout = setTimeout(function () {
 		this.tiledCanvas.clearAll();
+		this.drawDrawings(this.tiledCanvas, this.localDrawings);
 		this.tiledCanvas.redraw();
 		delete this.clearLocalDrawingsTimeout;
 	}.bind(this), 300);

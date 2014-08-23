@@ -58,7 +58,8 @@ function flashDonate () {
 function start (mode, room) {
     document.getElementById("modeselection").style.display = "none";
     (document.getElementById("gameoverlay") || {style: {}}).style.display = "none";
-    document.getElementById("tools").style.display = "block";
+    document.getElementById("tools").classList.remove("hidden");
+    document.getElementById("mobilemenu").classList.remove("hidden");
     document.getElementById("drawregion").style.display = "block";
     var server = "http://drawtogheter.squarific.com:8475";
     var local = "http://127.0.0.1:8475";
@@ -71,7 +72,7 @@ function start (mode, room) {
 function resizeDrawRegion () {
     var tools = document.getElementById("tools");
     var drawRegion = document.getElementById("drawregion");
-    drawRegion.style.minHeight = Math.max(400, window.innerHeight - tools.offsetHeight - 150) + 'px';
+    drawRegion.style.height = Math.max(640, window.innerHeight - tools.offsetHeight - 150) + 'px';
 }
 
 setInterval(flashDonate, 5 * 60 * 1000);
@@ -82,4 +83,12 @@ if (location.hash.substring(1)) {
     start('multi', location.hash.substring(1));
 } else if (urlParams.gameroom) {
     start('game', urlParams.gameroom);
+}
+
+function togglezindex (id) {
+    if (document.getElementById(id).style.zIndex == "1") {
+        document.getElementById(id).style.zIndex = "";
+        return;
+    }
+    document.getElementById(id).style.zIndex = "1";
 }
